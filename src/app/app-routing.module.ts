@@ -16,7 +16,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'pwd-recov',
+    path: 'password-recov',
     loadChildren: () => import('./pages/pwd-recov/pwd-recov.module').then( m => m.PwdRecovPageModule)
   },
 
