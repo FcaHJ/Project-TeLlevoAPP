@@ -1,0 +1,26 @@
+<ion-header [translucent]="true" class="ion-text-center ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>TeLlevoAPP</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-header class="ion-text-center ion-no-border">
+    <br>
+    <ion-title size="large"></ion-title>
+  </ion-header>
+
+  <div id="container">
+    <h3>Recuperar Contraseña</h3>
+    <ion-list>
+      <ion-item>
+        <ion-input [(ngModel)]="username" label="Nombre de usuario" typo="text" labelPlacement="stacked"></ion-input>
+      </ion-item>
+    </ion-list>
+    <br>
+    <ion-button expand="full" id="btn-pwdRecov" (click)="passwordRecovery()">Reestablecer</ion-button>
+  </div>
+</ion-content>
