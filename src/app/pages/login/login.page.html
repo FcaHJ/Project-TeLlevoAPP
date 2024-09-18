@@ -6,16 +6,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
-  <ion-header [translucent]="true" class="sub-titulo ion-no-border">
+<ion-content class="sub-titulo">
+  <div id="container" class="ion-content">
+    <ion-title class="ion-text-center">Iniciar Sesión</ion-title>
     <br>
-    <br>
-    <br>
-    <br>
-    <ion-title>Inicio Sesión</ion-title>
-  </ion-header>
-
-  <div id="container">
     <ion-list>
       <ion-item>
         <ion-input [(ngModel)]="username" label="Nombre de usuario" type="text" labelPlacement="stacked"></ion-input>
@@ -25,7 +19,10 @@
       </ion-item>
     </ion-list>
     <br>
-    <ion-button expand="full" (click)="validateLogin()">Ingresar</ion-button>
+    <ion-button expand="full" (click)="validateLogin()">
+      <ion-icon name="log-in-outline" slot="start"></ion-icon>
+      Ingresar
+    </ion-button>
     <br>
     <a href="password-recov">Recuperar Contraseña</a>
   </div>

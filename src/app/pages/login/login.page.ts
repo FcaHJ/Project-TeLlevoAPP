@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
         let extras: NavigationExtras = {
           state: {user: this.username}
         }
-        this.router.navigate(['/home'], extras);
+        this.router.navigate(['/loading'], extras);
     }else{
       this.generateMessage('Datos incorrectos', 'danger');
     }

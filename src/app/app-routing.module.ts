@@ -18,7 +18,11 @@ const routes: Routes = [
   {
     path: 'password-recov',
     loadChildren: () => import('./pages/pwd-recov/pwd-recov.module').then( m => m.PwdRecovPageModule)
+  },  {
+    path: 'loading',
+    loadChildren: () => import('./pages/loading/loading.module').then( m => m.LoadingPageModule)
   },
+
 
 ];
 
