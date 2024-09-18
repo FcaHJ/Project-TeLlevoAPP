@@ -1,17 +1,32 @@
 <ion-header [translucent]="true" class="ion-text-center ion-no-border">
-  <ion-toolbar>
+  <!-- <ion-toolbar>
     <ion-title>TeLlevoAPP</ion-title>
-  </ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
 
-<ion-content>
-  <ion-header [translucent]="true" class="ion-text-center ion-no-border">
-      <br>
-      <br>
-      <ion-title>¡Bienvenido {{username}}!</ion-title>
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Información</ion-title>
+    </ion-toolbar>
   </ion-header>
-
-  <div>
-
-  </div>
-</ion-content>
+  <ion-content class="ion-padding">Aquí se verá la información relevante de la app</ion-content>
+</ion-menu>
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>TeLlevoAPP</ion-title>
+      <ion-buttons slot="secondary">
+        <ion-button>
+          <ion-icon slot="icon-only" name="person-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    Bienvenido {{username}}!
+  </ion-content>
+</div>
