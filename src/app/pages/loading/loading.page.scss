@@ -28,3 +28,12 @@
     font-size: 1.5rem;
     margin-top: 20px;
   }
+
+  ion-content {
+    --background: none !important;
+    background: linear-gradient(to bottom, #f5f5dc, #8b4513) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
