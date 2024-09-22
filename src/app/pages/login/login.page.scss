@@ -12,7 +12,7 @@
     background-color: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(70, 3, 3, 0.1);
     max-width: 400px;
   }
   
@@ -52,7 +52,7 @@
 
   ion-content {
     --background: none !important;
-    background: linear-gradient(to bottom, #f5f5dc, #8b4513) !important;
+    background: linear-gradient(to bottom, #c2cedf, #323a3b) !important;
     display: flex;
     justify-content: center;
     align-items: center;
