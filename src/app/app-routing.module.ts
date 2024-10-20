@@ -18,10 +18,15 @@ const routes: Routes = [
   {
     path: 'password-recov',
     loadChildren: () => import('./pages/pwd-recov/pwd-recov.module').then( m => m.PwdRecovPageModule)
-  },  {
+  },
+  {
     path: 'loading',
     loadChildren: () => import('./pages/loading/loading.module').then( m => m.LoadingPageModule)
   },
+  {
+    path: '**',  // Captura todas las rutas no existentes
+    loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
+  }
 
 
 ];
