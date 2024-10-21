@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from 'src/app/api/login.service';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +10,14 @@ import { User } from 'src/app/models/user';
 export class HomePage implements OnInit {
   username!: string;
 
-  constructor(private loginService: LoginService) {  
+  constructor(private authService: AuthService) {  
   }
   
-  ngOnInit() {
+  async ngOnInit() {
     //Muestra el nombre de usuario
-    const currentUser: User | null = this.loginService.getCurrentUser();
-    if (currentUser) {
-      this.username = currentUser.username;
+    const logged_user: User | null = await this.authService.getCurrentUser();
+    if (logged_user) {
+      this.username = logged_user.username;
   }
   }
 }

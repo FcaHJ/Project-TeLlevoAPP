@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
-import { LoginService } from 'src/app/api/login.service';
 import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-pwd-recov',
@@ -17,7 +17,7 @@ export class PwdRecovPage implements OnInit {
 
   constructor(
     private toastController: ToastController, 
-    private loginService: LoginService, 
+    private authService: AuthService, 
     private modalCtrl: ModalController
   ) { }
 
@@ -25,9 +25,9 @@ export class PwdRecovPage implements OnInit {
   }
 
   //Funcion para Recuperar contraseña
-  passwordRecovery(){
+  async passwordRecovery(){
     if(
-      this.loginService.passwordRecovery(this.username)) {
+      await this.authService.passwordRecovery(this.username)) {
         let extras: NavigationExtras = {
           state: {user: this.username}
         }

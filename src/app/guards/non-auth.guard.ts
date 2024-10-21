@@ -1,3 +1,9 @@
+import { CanActivateFn } from '@angular/router';
+
+export const nonAuthGuard: CanActivateFn = (route, state) => {
+  return true;
+};
+
 /*import { CanActivateFn } from '@angular/router';
 
 export const authGuard: CanActivateFn = (route, state) => {
@@ -11,17 +17,17 @@ import { AuthService } from "../services/auth.service";
 @Injectable({
     providedIn: 'root'
 })
-export class AuthenticationGuard implements CanActivate {
+export class NonAuthenticationGuard implements CanActivate {
     constructor(
         private readonly router: Router,
         private readonly authService: AuthService
     ){ }
     async canActivate() {
-        console.log('Executing guard!')
+        console.log('Executing no-guard!')
         const auth = await this.authService.isAuthenticated();
-        if (!auth) {
-            console.log('User is not authenticated, redirecting to Login!')
-            await this.router.navigate(['/login']);
+        if (auth) {
+            console.log('User is authenticated, redirecting to Home!')
+            await this.router.navigate(['/home']);
         }
         return auth;
     }

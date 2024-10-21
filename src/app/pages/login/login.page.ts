@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { LoginService } from 'src/app/api/login.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,16 +17,16 @@ export class LoginPage implements OnInit {
     constructor( 
       private toastController: ToastController, 
       private router: Router, 
-      private loginService: LoginService //Servicio
+      private authService: AuthService //Servicio
     ) {
     }
   ngOnInit(){
   }
 
   //Valida datos del login
-  validateLogin(){
+  async validateLogin(){
     if (
-      this.loginService.validateLogin(this.username, this.password)) {
+      await this.authService.authenticate(this.username, this.password)) {
         this.generateMessage('Datos correctos', 'success');
         let extras: NavigationExtras = {
           state: {user: this.username}
