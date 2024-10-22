@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    color: #00263d;
     //background-color: #007bff;
   }
   
@@ -31,9 +32,10 @@
 
   ion-content {
     --background: none !important;
-    background: linear-gradient(to bottom, #c2cedf, #323a3b) !important;
+    background-color: #e9e9e9;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    color: #00263d;
   }

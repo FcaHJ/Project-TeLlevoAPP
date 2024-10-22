@@ -10,7 +10,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from './services/storage.service';
 import { IonicStorageModule } from '@ionic/storage-angular';
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HttpClientModule } from '@angular/common/http';
 
 export function initApp(storageService: StorageService) {
   return () => storageService.init();
@@ -30,7 +30,14 @@ export function routeReuseStrategy() {
 
 @NgModule({
   declarations: [AppComponent, ModalComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, IonicStorageModule.forRoot()],
+  imports: [
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule, 
+    FormsModule, 
+    HttpClientModule,
+    IonicStorageModule.forRoot(),
+  ],
   providers: [ routeReuseStrategy(), storageService(), provideHttpClient(withInterceptorsFromDi()) ],
   bootstrap: [AppComponent],
 })

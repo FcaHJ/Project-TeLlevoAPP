@@ -35,3 +35,29 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+:root {
+    /* Color de fondo de la aplicación */
+    --ion-background-color: #e9e9e9; 
+    
+    /* Color de texto global */
+    --ion-color-dark: #222428; /* Color del texto */
+    --ion-color-light: #ffffff; /* Color de fondo claro */
+    
+    /* Colores globales según sea necesario */
+    --ion-color-primary: #00263d;
+    --ion-color-primary-dark: #00263d;
+    --ion-color-secondary: #0cd1e5;
+
+    --ion-color-toolbar-bg: #3880ff; /* Color de fondo del toolbar en modo claro */
+
+  }
+
+  
+  /* Estilos para el toolbar en modo oscuro */
+  body.dark {
+    --ion-color-toolbar-bg: #1e1e1e; /* Color de fondo del toolbar en modo oscuro */
+    --ion-color-toolbar-text: #b91f1f; /* Color del texto en modo oscuro */
+  }
+  
