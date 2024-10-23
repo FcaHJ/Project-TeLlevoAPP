@@ -2,28 +2,40 @@
 <ion-menu contentId="main-content">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title>Información</ion-title>
+      <ion-title >-- TeLlevoAPP --</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">Aquí se verá la información relevante de la app</ion-content>
+
+  <ion-content class="ion-padding">    
+      <ion-segment (ionChange)="segmentChanged($event)" value="data">
+        <ion-segment-button value="home">
+          <ion-icon name="home-sharp"></ion-icon> Inicio
+        </ion-segment-button>
+        <ion-segment-button value="profile"> 
+          <ion-icon name="person-circle-sharp"></ion-icon>Perfil
+        </ion-segment-button>
+      </ion-segment>
+      <button (click)="logout()" class="icon-logout">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+  </ion-content>
 </ion-menu>
+
 <div class="ion-page" id="main-content">
   <ion-header>
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
         <ion-menu-button class="icono"></ion-menu-button>
       </ion-buttons>
-      <ion-title class="ion-text-center ion-no-border">TeLlevoAPP</ion-title>
-      <ion-buttons slot="secondary">
-        <ion-button class="icono">
-          <ion-icon slot="icon-only" name="person-circle"></ion-icon>
-        </ion-button>
-      </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
-    Bienvenido {{username}}!
-    <p>Ejemplo: H<span style="color: blue; font-weight: bold;">o</span>la</p>
 
+  <ion-content class="ion-padding">
+    <ng-container *ngIf="selectedSegment == 'home'">
+      <app-home-comp></app-home-comp>
+    </ng-container>
+    <ng-container *ngIf="selectedSegment == 'profile'">
+      <app-profile></app-profile>
+    </ng-container>
   </ion-content>
 </div>

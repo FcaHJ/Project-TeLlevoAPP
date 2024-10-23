@@ -1,3 +1,10 @@
+ion-title{
+  color: #e9e9e9;
+  text-align: center;
+}
+.icono{
+  color: #e9e9e9;
+}
 ion-content {
     --background: none !important;
     background-color: #e9e9e9!important;
@@ -7,3 +14,25 @@ ion-content {
     min-height: 100vh;
     --color: black;
   }
+ion-segment{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+ion-segment-button {
+  border-bottom: 1px solid #a3a3a3;
+  color: black;
+}
+ion-icon{
+  color: black;
+}
+.icon-logout{
+  margin-top: 10px;
+  display: flex;
+  margin-left: auto;
+  padding: 10px;
+  border-radius: 1rem;
+  font-size: 28px;
+  align-items: right;
+  background-color: #d8d8d8;
+}

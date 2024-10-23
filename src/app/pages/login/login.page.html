@@ -7,16 +7,17 @@
 </ion-header>
 
 <ion-content>
+  <div class="circle-one"></div>
   <div id="container" class="ion-content">
     <ion-title class="sub">
       <h5>Iniciar Sesión</h5>
     </ion-title>
     <br>
     <ion-list>
-      <ion-item>
+      <ion-item color="secondary"> 
         <ion-input [(ngModel)]="username" label="Nombre de usuario" type="text" labelPlacement="stacked"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item color="secondary">
         <ion-input [(ngModel)]="password" label="Contraseña" type="password" labelPlacement="stacked"></ion-input>
       </ion-item>
     </ion-list>
@@ -28,5 +29,6 @@
     <br>
     <a href="password-recov">Recuperar Contraseña</a>
   </div>
+  <div class="circle-two"></div>
 </ion-content>
  

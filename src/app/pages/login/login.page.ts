@@ -42,7 +42,7 @@ export class LoginPage implements OnInit {
       user ? this.successAuthentication() : this.failedAuthentication()
     }
   
-    private failedAuthentication(message: string = 'Failed login') {
+    private failedAuthentication(message: string = 'Datos Incorrectos') {
       this.generateMessage(message, 'danger')
         .then(() => { console.log('Failed login') });
     }
