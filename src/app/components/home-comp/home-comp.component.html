@@ -1,3 +1,19 @@
-<ion-content color="secondary">
-  <p>Bienvenido {{username}}!</p>
+<ion-content>
+  <p >[Vista pasajero]</p>
+  <p class="ion-text-right">Bienvenido {{username}}!</p>
+  <div class="container">
+    <h5>Viaja cómodo, llega seguro.</h5>
+    <div class="input-container">
+      <ion-input fill="outline" placeholder="Punto de partida"></ion-input>
+      <ion-icon name="navigate-sharp" slot="end" class="input-icon"></ion-icon>
+    </div>
+    <div class="input-container">
+      <ion-input fill="outline" placeholder="Destino"></ion-input>
+    </div>
+    <ion-button class="btn-home">Ver precios</ion-button>
+    <ion-button class="btn-home">Programar viaje</ion-button>
+  </div>
+  <div>
+    <p>[MAPA]</p>
+  </div>
 </ion-content>

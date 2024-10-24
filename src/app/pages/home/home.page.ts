@@ -41,7 +41,7 @@ export class HomePage implements OnInit {
           handler: () => {
             this.authService.logout().then(() => {
               console.log('Sesión cerrada');
-              this.router.navigate(['/login']); // Redirige a la página de inicio de sesión
+              this.router.navigate(['/login']); // Redirige a la página de Login
             }).catch(err => {
               console.error('Error al cerrar sesión:', err);
             });
