@@ -31,10 +31,10 @@
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ng-container *ngIf="selectedSegment == 'home'">
+    <ng-container *ngIf="selectedSegment === 'home'">
       <app-home-comp></app-home-comp>
     </ng-container>
-    <ng-container *ngIf="selectedSegment == 'profile'">
+    <ng-container *ngIf="selectedSegment === 'profile'">
       <app-profile></app-profile>
     </ng-container>
   </ion-content>

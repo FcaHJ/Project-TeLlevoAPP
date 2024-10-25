@@ -11,3 +11,12 @@ Uso SQLite:
 npm install cordova-sqlite-storage
 
 npm install @awesome-cordova-plugins/sqlite
+
+Uso Geolocalización:
+
+npm install @capacitor/geolocation
+
+Uso Leaflet:
+
+npm install leaflet
+npm install @types/leaflet

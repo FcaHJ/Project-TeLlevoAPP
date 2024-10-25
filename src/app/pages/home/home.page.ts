@@ -57,4 +57,5 @@ export class HomePage implements OnInit {
   segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
   }
+
 }
