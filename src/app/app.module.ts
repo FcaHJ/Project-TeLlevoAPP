@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { StorageService } from './services/storage.service';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { provideHttpClient, withInterceptorsFromDi, HttpClientModule } from '@angular/common/http';
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 
 export function initApp(storageService: StorageService) {
   return () => storageService.init();
@@ -38,7 +39,12 @@ export function routeReuseStrategy() {
     HttpClientModule,
     IonicStorageModule.forRoot(),
   ],
-  providers: [ routeReuseStrategy(), storageService(), provideHttpClient(withInterceptorsFromDi()) ],
+  providers: [
+    SQLite,
+    routeReuseStrategy(), 
+    storageService(), 
+    provideHttpClient(withInterceptorsFromDi()), 
+    ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
