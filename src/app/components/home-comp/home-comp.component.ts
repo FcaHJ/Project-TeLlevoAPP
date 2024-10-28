@@ -14,22 +14,16 @@ import { LocationService } from 'src/app/services/location.service';
   templateUrl: './home-comp.component.html',
   styleUrls: ['./home-comp.component.scss'],
 })
-<<<<<<< HEAD
 export class HomeCompComponent implements OnInit {
-  username!: string; // Variable para almacenar el nombre de usuario
-  map: any; // Variable para almacenar el mapa
-  showPrices: boolean = false; // Controla la visibilidad de la lista de precios
-  prices = [ // Array de precios
+  username!: string; 
+  map: any; 
+  showPrices: boolean = false;
+  prices = [ 
     { name: 'Viaje de 10 minutos', value: 2.00 },
     { name: 'Viaje de 20 minutos', value: 6.50 },
     { name: 'Viaje de 40 minutos', value: 15.00 },
     { name: 'Viaje de 60 minutos', value: 21.00 },
   ];
-=======
-export class HomeCompComponent  implements OnInit {
-
-  username!: string;
-  map: any;
   startLocation: string = '';
   endLocation: string = '';
   startMarker: any;
@@ -41,8 +35,6 @@ export class HomeCompComponent  implements OnInit {
   suggestionsEnd: any[] = [];
   userLatitude!: number;
   userLongitude!: number;
->>>>>>> ff894e3751698cb829ea3c80f55b3a593fd8521b
-
   constructor(
     private authService: AuthService,
     private alertController:AlertController,
@@ -51,12 +43,12 @@ export class HomeCompComponent  implements OnInit {
     ) { this.getUserLocation(); }
 
   async ngOnInit() {
-    // Muestra el nombre de usuario
+    //Muestra el nombre de usuario
     const logged_user: User | null = await this.authService.getCurrentUser();
     if (logged_user) {
       this.username = logged_user.username;
-    }
-    this.loadMap(); // Carga el mapa
+  }
+  this.loadMap();
   }
 
   async checkPermissions() {
@@ -65,26 +57,6 @@ export class HomeCompComponent  implements OnInit {
   }
 
   async loadMap() {
-<<<<<<< HEAD
-    const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-    this.map = L.map('mapId').setView([coordinates.coords.latitude, coordinates.coords.longitude], 15);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    L.marker([coordinates.coords.latitude, coordinates.coords.longitude])
-      .addTo(this.map)
-      .bindPopup('Estás aquí.')
-      .openPopup();
-  }
-
-  // Método para alternar la visibilidad de la lista de precios
-  togglePrices() {
-    this.showPrices = !this.showPrices;
-  }
-}
-=======
     try{
       const coordinates = await Geolocation.getCurrentPosition({ 
         enableHighAccuracy: true, 
@@ -225,5 +197,9 @@ export class HomeCompComponent  implements OnInit {
       this.suggestionsEnd = [];
     }
   }
+
+
+  togglePrices() {
+    this.showPrices = !this.showPrices;
+  }
 }
->>>>>>> ff894e3751698cb829ea3c80f55b3a593fd8521b

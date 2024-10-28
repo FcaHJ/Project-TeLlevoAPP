@@ -1,51 +1,34 @@
 <ion-content>
-<<<<<<< HEAD
-  <p class="vista-pasajero">[Vista pasajero]</p>
+  <pclass="vista-pasajero">[Vista pasajero]</p>
   <p class="bienvenido ion-text-right">Bienvenido {{username}}!</p>
   
   <div class="container">
     <h5 class="viaja-comodo">Viaja cómodo, llega seguro.</h5>
-    
-=======
-  <p>[Vista pasajero]</p>
-  <p class="ion-text-right">Bienvenido {{username}}!</p>
-  <div class="container">
-    <h5>Viaja cómodo, llega seguro.</h5>
 
->>>>>>> ff894e3751698cb829ea3c80f55b3a593fd8521b
+    
     <div class="input-container">
-      <ion-input
-        fill="outline"
-        [(ngModel)]="startLocation"
-        placeholder="Punto de partida"
-        (ionInput)="onSearchChange($event, 'start')">
-      </ion-input>
+      <ion-input fill="outline" [(ngModel)]="startLocation"  placeholder="Punto de partida" (ionInput)="onSearchChange($event, 'start')"></ion-input>
       <ion-icon name="navigate-sharp" slot="end" class="input-icon"></ion-icon>
     </div>
-<<<<<<< HEAD
     
-=======
     <ion-list *ngIf="suggestionsStart.length > 0">
       <ion-item *ngFor="let suggestion of suggestionsStart" (click)="selectSuggestion(suggestion, 'start')">
         {{ suggestion.display_name }}
       </ion-item>
     </ion-list>
 
->>>>>>> ff894e3751698cb829ea3c80f55b3a593fd8521b
     <div class="input-container">
-      <ion-input
-        fill="outline"
-        [(ngModel)]="endLocation"
-        placeholder="Destino"
-        (ionInput)="onSearchChange($event, 'end')">
-      </ion-input>
+      <ion-input fill="outline" [(ngModel)]="endLocation" placeholder="Destino" (ionInput)="onSearchChange($event, 'end')"></ion-input>
     </div>
-<<<<<<< HEAD
-    
-    <ion-button class="btn-home custom-button" (click)="togglePrices()">
+    <ion-list *ngIf="suggestionsEnd.length > 0">
+      <ion-item *ngFor="let suggestion of suggestionsEnd" (click)="selectSuggestion(suggestion, 'end')">
+        {{ suggestion.display_name }}
+      </ion-item>
+    </ion-list>
+    <ion-button class="btn-home custom-button" (click)="togglePrices()"(ionInput)="onSearchChange($event, 'end')">
       Ver precios
     </ion-button>
-
+    <ion-button class="btn-home" (click)="calculateRoute()">Ver Ruta</ion-button>
     <ion-button class="btn-home custom-button">Programar viaje</ion-button>
 
     <ion-list *ngIf="showPrices">
@@ -55,21 +38,7 @@
     </ion-list>
   </div>
 
-  <div id="mapId" style="height: 100%;"></div>
-</ion-content> 
-=======
-    <ion-list *ngIf="suggestionsEnd.length > 0">
-      <ion-item *ngFor="let suggestion of suggestionsEnd" (click)="selectSuggestion(suggestion, 'end')">
-        {{ suggestion.display_name }}
-      </ion-item>
-    </ion-list>
-
-    <ion-button class="btn-home" (click)="calculateRoute()">Ver precios</ion-button>
-    <ion-button class="btn-home">Programar viaje</ion-button>
-  </div>
-
   <ion-content>
     <div id="mapId"></div>
   </ion-content>
 </ion-content>
->>>>>>> ff894e3751698cb829ea3c80f55b3a593fd8521b
