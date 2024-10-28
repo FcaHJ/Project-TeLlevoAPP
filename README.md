@@ -1,4 +1,4 @@
-*Proyecto universitario para la signatura de aplicaciones moviles*
+*Proyecto universitario para la asignatura de aplicaciones moviles*
 -
 
 
