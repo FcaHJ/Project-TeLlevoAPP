@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import { AlertController } from '@ionic/angular';
 import { lastValueFrom } from 'rxjs';
+import { LocationService } from 'src/app/services/location.service';
 
 
 @Component({
@@ -22,12 +23,19 @@ export class HomeCompComponent  implements OnInit {
   startMarker: any;
   endMarker: any;
   routeLayer: any;
+  searchTerm: string = '';
+  suggestions: any[] = [];
+  suggestionsStart: any[] = [];
+  suggestionsEnd: any[] = [];
+  userLatitude!: number;
+  userLongitude!: number;
 
   constructor(
     private authService: AuthService,
     private alertController:AlertController,
     private http: HttpClient,
-    ) { }
+    private locationService: LocationService,
+    ) { this.getUserLocation(); }
 
   
 
@@ -73,6 +81,12 @@ export class HomeCompComponent  implements OnInit {
     }catch(error){
       this.showAlert('Error', 'No se pudo obtener la ubicación. Por favor, verifica que los permisos estén activados o intenta de nuevo.');
     }
+  }
+
+  async getUserLocation() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.userLatitude = coordinates.coords.latitude;
+    this.userLongitude = coordinates.coords.longitude;
   }
 
   async calculateRoute() {
@@ -147,5 +161,38 @@ export class HomeCompComponent  implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  onSearchChange(event: any, type: string) {
+    const query = event.detail.value;
+    const radius = 5000; // 5 km de radio, puedes ajustarlo según necesites
+  
+    if (query.length > 2) {
+      this.locationService
+        .searchLocation(query, this.userLatitude, this.userLongitude, radius)
+        .subscribe((results: any) => {
+          if (type === 'start') {
+            this.suggestionsStart = results;
+          } else {
+            this.suggestionsEnd = results;
+          }
+        });
+    } else {
+      if (type === 'start') {
+        this.suggestionsStart = [];
+      } else {
+        this.suggestionsEnd = [];
+      }
+    }
+  }
+  
+  selectSuggestion(suggestion: any, type: string) {
+    if (type === 'start') {
+      this.startLocation = suggestion.display_name;
+      this.suggestionsStart = [];
+    } else {
+      this.endLocation = suggestion.display_name;
+      this.suggestionsEnd = [];
+    }
   }
 }
