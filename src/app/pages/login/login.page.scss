@@ -92,4 +92,27 @@
     padding-bottom: 12px;
   }
 
+  .text-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; 
+    text-align: center;
+  }
   
+  .custom-text{
+    color:#00263d;
+
+  }
+  .image-container {
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+    height: 100%;             
+  }
+  ion-img {
+    width: 100px;  
+    height: auto;  
+   
+    
+  }
