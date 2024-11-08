@@ -83,7 +83,9 @@ export class UserService  {
       const index = this.users.findIndex(user => user.id === updatedUser.id);
       if (index !== -1) {
         this.users[index] = updatedUser;
-        this.storage.updateUser(updatedUser);
+        
+        // Actualizar los usuarios en el localStorage
+        this.storage.set('users', this.users);
       }
     });
   }

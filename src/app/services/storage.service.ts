@@ -71,7 +71,12 @@ export class StorageService {
   }
 
   // Método para guardar los usuarios en el Storage
-  public async set(key: string, value: any): Promise<void> {
-    await this._storage?.set(key, value);
+  public set(key: string, value: any){
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  get(key: string): any {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
   }
 }
