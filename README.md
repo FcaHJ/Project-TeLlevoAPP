@@ -6,15 +6,19 @@ Uso de Storage:
 
 npm install @ionic/storage-angular
 
-Uso SQLite:
+---
 
-npm install cordova-sqlite-storage
+### Correr API de usarios en una terminal aparte para el correcto funcionamiento de la app:
 
-npm install @awesome-cordova-plugins/sqlite
+### `nodemon index.js`
+
+---
 
 Uso Geolocalización:
 
 npm install @capacitor/geolocation
+
+---
 
 Uso Leaflet:
 
