@@ -25,27 +25,32 @@ export class PwdRecovPage implements OnInit {
   }
 
   //Funcion para Recuperar contraseña
-  async passwordRecovery(){
-    if(
-      await this.authService.passwordRecovery(this.username)) {
-        let extras: NavigationExtras = {
-          state: {user: this.username}
-        }
-        this.openModal();
-    }else{
+  async passwordRecovery() {
+    const user = await this.authService.passwordRecovery(this.username);
+    if (user) {
+      this.openModal(user.username);
+    } else {
       this.generateMessage('Usuario no encontrado', 'danger');
     }
-} 
+  } 
 
-async openModal() {
-  const modal = await this.modalCtrl.create({
-    component: ModalComponent,
-  });
-  await modal.present();
+  async openModal(username: string) {
+    const modal = await this.modalCtrl.create({
+      component: ModalComponent,
+      componentProps: { username }
+    });
+    await modal.present();
 
-  const { data, role } = await modal.onWillDismiss();
-
-}
+    const { data } = await modal.onWillDismiss();
+    if (data && data.newPassword) {
+      const success = await this.authService.updatePassword(username, data.newPassword);
+      if (success) {
+        this.generateMessage('Contraseña actualizada exitosamente', 'success');
+      } else {
+        this.generateMessage('Error al actualizar la contraseña', 'danger');
+      }
+    }
+  }
 
 async generateMessage(message: string, color: string){
   const toast = await this.toastController.create({

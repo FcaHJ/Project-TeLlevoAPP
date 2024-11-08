@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { User } from 'src/app/models/user';
+import { User, UserService } from 'src/app/services/user.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -10,36 +10,32 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
-  //Variables
-    username!: string;
-    password!: string;
+ 
+  username!: string;
+  password!: string;
     
-    constructor( 
+  constructor( 
       private toastController: ToastController, 
       private router: Router, 
-      private authService: AuthService //Servicio
-    ) {
-    }
-  ngOnInit(){
+      private authService: AuthService, 
+  ) {}
+
+  async ngOnInit(){
+    await this.authService.waitForUsers();
   }
 
-  //Valida datos del login
-  validateLogin(){
-    console.log("Executing login validation")
-    this.authService
-      .authenticate(this.username, this.password)
-      .then(user => {
-        this.authenticateHandler(user);
-      })
-      .catch(err => {
-        console.log('Error on login: ', err)
+  // Valida los datos del login
+  async validateLogin() {
+    const user = await this.authService.authenticate(this.username, this.password);
+    this.authenticateHandler(user);
+  }
+   
+  private authenticateHandler(user: User | null) {
+      if (user) {
+        this.successAuthentication();
+      } else {
         this.failedAuthentication();
-      });
-    }
-
-    private authenticateHandler(user: User | null) {
-      user ? this.successAuthentication() : this.failedAuthentication()
+      }
     }
   
     private failedAuthentication(message: string = 'Datos Incorrectos') {

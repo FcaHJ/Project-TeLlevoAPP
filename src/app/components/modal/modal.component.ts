@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ModalComponent  implements OnInit {
 
     //Variables
+    @Input() username!: string;
     password!: string;
     password2!: string;
 
@@ -27,7 +28,7 @@ export class ModalComponent  implements OnInit {
   async confirm() {
     if (this.password === this.password2) {
       // Llama al servicio para cambiar la contraseña
-      const success = await this.authService.changePassword(this.password);
+      const success = await this.authService.updatePassword(this.username,this.password);
       if (success) {
         return this.modalCtrl.dismiss(this.generateMessage('Contraseña cambiada', 'success'), 'confirm');
       }else{
