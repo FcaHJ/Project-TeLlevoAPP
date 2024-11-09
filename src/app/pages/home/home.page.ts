@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { personCircleSharp, logOutOutline, homeSharp, analytics } from 'ionicons/icons';
+import { User } from 'src/app/services/user.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import * as L from 'leaflet';
+import { Geolocation } from '@capacitor/geolocation';
+import { AlertController, MenuController } from '@ionic/angular';
+import { lastValueFrom } from 'rxjs';
+import { LocationService } from 'src/app/services/location.service';
+import { Capacitor } from '@capacitor/core';
+
 
 @Component({
   selector: 'app-home',
@@ -12,82 +17,227 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomePage implements OnInit {
 
-  selectedComponent: string = '';  
   userRole: number | null = null;
-
+  username!: string; 
+  map: any; 
+  showPrices: boolean = false;
+  prices = [ 
+    { name: 'Viaje de 10 minutos', value: 2.00 },
+    { name: 'Viaje de 20 minutos', value: 6.50 },
+    { name: 'Viaje de 40 minutos', value: 15.00 },
+    { name: 'Viaje de 60 minutos', value: 21.00 },
+  ];
+  startLocation: string = '';
+  endLocation: string = '';
+  startMarker: any;
+  endMarker: any;
+  routeLayer: any;
+  searchTerm: string = '';
+  suggestions: any[] = [];
+  suggestionsStart: any[] = [];
+  suggestionsEnd: any[] = [];
+  userLatitude!: number;
+  userLongitude!: number;
   constructor(
     private authService: AuthService,
-    private router: Router, 
-    private alertController: AlertController) {
-    addIcons({ personCircleSharp, logOutOutline, homeSharp, analytics });  
-  }
+    private alertController:AlertController,
+    private http: HttpClient,
+    private locationService: LocationService,
+    ) { this.getUserLocation(); }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.userRole = this.authService.getCurrentUserRole();
-    this.setDefaultComponent(); 
+    //Muestra el nombre de usuario
+    let logged_user = this.authService.getCurrentUser();
+    if (logged_user) {
+      this.username = logged_user.username;
+      console.log("Nombre de usuario:", this.username); // Verificar que el nombre de usuario esté presente
+    }else{
+      logged_user = null;
+    }
+    this.getUserLocation();
+    this.loadMap();
   }
 
-  isAdmin() {
-    return this.userRole === 1; 
+  async checkPermissions() {
+    const permission = await Geolocation.requestPermissions();
+    console.log(permission);
   }
 
-  isPassenger() {
-    return this.userRole === 2; 
-  }
+  async loadMap() {
+    try{
+      const coordinates = await Geolocation.getCurrentPosition({ 
+        enableHighAccuracy: true, 
+        timeout: 3000, 
+        maximumAge: 0 });
 
-  isDriver() {
-    return this.userRole === 3; 
-  }
+      const { latitude, longitude } = coordinates.coords;
 
-  // Establecer la página de inicio según el rol
-  setDefaultComponent() {
-    if (this.userRole === 1) {  // Si es Admin
-      this.selectedComponent = 'admin'
-    } else if (this.userRole === 2) {  // Si es Usuario
-      this.selectedComponent = 'home-comp'
-    } else {  // Si es otro rol (puedes agregar más roles si es necesario)
-      this.selectedComponent = 'profile'
+      // Verificación de exactitud
+      if (coordinates.coords.accuracy && coordinates.coords.accuracy > 50) { // Ejemplo de precisión mínima
+        this.showAlert('Precisión baja', 'La ubicación puede no ser precisa. Intenta en un área con mejor señal.');
+      }
+
+      this.map = L.map('mapId').setView([latitude, longitude], 15);
+    
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(this.map);
+    
+      L.marker([latitude, longitude])
+        .addTo(this.map)
+        .bindPopup('Estás aquí.')
+        .openPopup();
+    }catch(error){
+      this.showAlert('Error', 'No se pudo obtener la ubicación. Por favor, verifica que los permisos estén activados o intenta de nuevo.');
     }
   }
 
-  setComponent(component: string) {
-    this.selectedComponent = component; // Cambia el componente mostrado
-  }
-  
-  // Función para cerrar sesión
-  async logout() {
-    const alert = await this.alertController.create({
-      header: 'Confirmar Cierre de Sesión',
-      message: '¿Estás seguro de que deseas cerrar sesión?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Cierre de sesión cancelado');
-          }
-        },
-        {
-          text: 'Cerrar Sesión',
-          handler: () => {
-            this.performLogout();
+ /* async getUserLocation() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.userLatitude = coordinates.coords.latitude;
+    this.userLongitude = coordinates.coords.longitude;
+  }*/
+
+    async getUserLocation() {
+      try {
+        if (Capacitor.isNativePlatform()) {
+          // Si es una plataforma nativa (Android/iOS), usa Capacitor Geolocation
+          const coordinates = await Geolocation.getCurrentPosition();
+          this.userLatitude = coordinates.coords.latitude;
+          this.userLongitude = coordinates.coords.longitude;
+        } else {
+          // Si es la web, usa la API estándar de geolocalización
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                this.userLatitude = position.coords.latitude;
+                this.userLongitude = position.coords.longitude;
+                console.log('Latitud:', this.userLatitude, 'Longitud:', this.userLongitude);
+              },
+              (error) => {
+                this.showAlert('Error', 'No se pudo obtener la ubicación en la web.');
+              }
+            );
+          } else {
+            this.showAlert('Error', 'Geolocalización no soportada en este navegador.');
           }
         }
-      ]
-    });
+      } catch (error) {
+        console.error('Error al obtener la ubicación:', error);
+        this.showAlert('Error', 'No se pudo obtener la ubicación.');
+      }
+    }
 
-    await alert.present(); // Muestra la alerta
-  }
+  async calculateRoute() {
+    if (!this.startLocation || !this.endLocation) {
+      this.showAlert('Error', 'Por favor, ingresa tanto el punto de partida como el de llegada.');
+      return;
+    }
 
-  // Método que realiza el logout
-  async performLogout() {
+    // Geocodificar la ubicación de inicio y destino
+    const startUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.startLocation)}&format=json&limit=1`;
+    const endUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.endLocation)}&format=json&limit=1`;
+
     try {
-      await this.authService.logout();
-      this.router.navigateByUrl('/login');
+      const startRes = await lastValueFrom(this.http.get<any[]>(startUrl));
+      const endRes = await lastValueFrom(this.http.get<any[]>(endUrl));
+    
+      if (startRes.length > 0 && endRes.length > 0) {
+        const startCoords = startRes[0];
+        const endCoords = endRes[0];
+    
+        const startLatLng: [number, number] = [parseFloat(startCoords.lat), parseFloat(startCoords.lon)];
+        const endLatLng: [number, number] = [parseFloat(endCoords.lat), parseFloat(endCoords.lon)];
+    
+        // Colocar marcadores en el mapa
+        if (this.startMarker) this.map.removeLayer(this.startMarker);
+        if (this.endMarker) this.map.removeLayer(this.endMarker);
+    
+        this.startMarker = L.marker(startLatLng).addTo(this.map).bindPopup('Punto de Partida').openPopup();
+        this.endMarker = L.marker(endLatLng).addTo(this.map).bindPopup('Punto de Llegada').openPopup();
+    
+        // Centrar el mapa entre los dos puntos
+        const bounds = L.latLngBounds(startLatLng, endLatLng);
+        this.map.fitBounds(bounds);
+    
+        // Trazar ruta entre los puntos
+        this.drawRoute(startLatLng, endLatLng);
+    
+      } else {
+        this.showAlert('Ubicación no encontrada', 'No se encontraron las ubicaciones especificadas. Intenta nuevamente.');
+      }
     } catch (error) {
-      console.error('Error en el cierre de sesión:', error);
+      console.error('Error en la búsqueda de ubicaciones:', error);
+      this.showAlert('Error', 'Ocurrió un problema al buscar las ubicaciones. Intenta nuevamente.');
     }
   }
 
+  async drawRoute(startLatLng: [number, number], endLatLng: [number, number]) {
+    const routeUrl = `https://router.project-osrm.org/route/v1/driving/${startLatLng[1]},${startLatLng[0]};${endLatLng[1]},${endLatLng[0]}?geometries=geojson`;
+
+    try {
+      const routeRes = await this.http.get<any>(routeUrl).toPromise();
+      const route = routeRes.routes[0];
+
+      // Eliminar la ruta anterior, si existe
+      if (this.routeLayer) {
+        this.map.removeLayer(this.routeLayer);
+      }
+
+      const routeCoordinates = route.geometry.coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
+      this.routeLayer = L.polyline(routeCoordinates, { color: 'blue', weight: 5 }).addTo(this.map);
+
+    } catch (error) {
+      console.error('Error al trazar la ruta:', error);
+      this.showAlert('Error', 'No se pudo trazar la ruta entre los puntos.');
+    }
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  onSearchChange(event: any, type: string) {
+    const query = event.detail.value;
+    const radius = 5000; // 5 km de radio, puedes ajustarlo según necesites
+  
+    if (query.length > 2) {
+      this.locationService
+        .searchLocation(query, this.userLatitude, this.userLongitude, radius)
+        .subscribe((results: any) => {
+          if (type === 'start') {
+            this.suggestionsStart = results;
+          } else {
+            this.suggestionsEnd = results;
+          }
+        });
+    } else {
+      if (type === 'start') {
+        this.suggestionsStart = [];
+      } else {
+        this.suggestionsEnd = [];
+      }
+    }
+  }
+  
+  selectSuggestion(suggestion: any, type: string) {
+    if (type === 'start') {
+      this.startLocation = suggestion.display_name;
+      this.suggestionsStart = [];
+    } else {
+      this.endLocation = suggestion.display_name;
+      this.suggestionsEnd = [];
+    }
+  }
+
+
+  togglePrices() {
+    this.showPrices = !this.showPrices;
+  }
 }

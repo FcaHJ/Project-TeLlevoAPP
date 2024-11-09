@@ -1,49 +1,75 @@
-ion-toolbar {
-  --background: none !important; 
+ion-content{
+  --background: none !important;
+    color: #e9e9e9 !important;
+    padding: 5px;
 }
-
-ion-title{
-  color: #e9e9e9;
-  text-align: center;
-}
-.icono{
-  color: #e9e9e9;
-}
-ion-content {
-    --background: none !important;
-    background-color: #e9e9e9!important;
+.input-container {
+    position: relative;
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    --color: black;
   }
-ion-segment{
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  
+ion-input {
+   width: 100%;
+   padding-right: 40px; /* Espacio para el ícono */
+   border: 1px solid gray;
+   border-radius: 5px;
+   margin:4px 5px ;
+   color: black;
 }
-ion-segment-button {
-  border-bottom: 1px solid #a3a3a3;
-  color: black;
+  
+.input-icon {
+   position: absolute;
+   right: 10px;
+   color: #666;
+   font-size: 24px;
+   padding-right: 5px;
 }
-ion-icon{
-  color: black;
-}
-.icon-logout{
-  margin-top: 10px;
-  display: flex;
-  margin-left: auto;
-  padding: 10px;
-  border-radius: 1rem;
-  font-size: 28px;
-  align-items: right;
-  background-color: #d8d8d8;
+.btn-home{
+    margin-right: 10px;
+    margin-top: 8px;
+} 
+.custom-button {
+  color: #f2f4f5; 
 }
 
-ion-img {
-  width: 20px;  
-  height: auto;  
- 
+#mapId {
+    margin: 10px auto;
+    height: 60%;
+    width: 90%;
+    background: linear-gradient(to bottom, #f5f5dc, #91a1ff);
+  }
+
+.leaflet-control-zoom {
+    background-color: #ffffff !important;
+    border-radius: 5px !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+    background-color: #007bff;
+    color: white;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+  }
+  .vista-pasajero {
+    color: #000000;
+  } 
+  .bienvenido {
+    color: #000000; 
+  } 
+  .viaja-comodo {
+    color: #000000; 
+  }
+  ion-list {
+    background-color: #f0f0f0; /* Cambia el color de fondo */
+    border-radius: 8px; /* Opcional: esquinas redondeadas */
+  }
   
-}
+  ion-item {
+    color: #050505; /* Cambia el color del texto */
+    --background: transparent; /* Para asegurar que el fondo no sea blanco */
+  }
+  

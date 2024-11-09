@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   // Cargar el usuario desde almacenamiento local 
-  private async loadCurrentUser(): Promise<void> {
+  async loadCurrentUser(): Promise<void> {
     const user = await this.storage.getCurrentUser();
     if (user) {
       this.currentUser = user;

@@ -1,0 +1,31 @@
+
+<ion-menu side="start" content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <!-- Recorre y muestra los elementos del menú -->
+      <!-- <ion-item *ngFor="let item of menuItems" (click)="navigateTo(item.url)">
+        {{ item.title }} 
+      </ion-item>-->
+      <ion-item>
+        <a href="/home">Inicio</a>
+      </ion-item>
+      <ion-item>
+        <a href="/profile">Perfil</a>
+      </ion-item>
+      <ion-item>
+        <a href="/users">Usuarios</a>
+      </ion-item>
+    </ion-list>
+    <!-- Botón de cierre de sesión -->
+    <button (click)="logout()">
+      <ion-icon name="log-out-outline" class="icon-logout"></ion-icon>
+    </button>
+  </ion-content>
+</ion-menu>
+
+

@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button> 
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="user-data">
+    <ion-list>
+      <p class="a">[Foto usuario]</p>
+      <ion-item>
+        <p>Nombre Usuario: {{ username }}</p>
+      </ion-item>
+      <ion-item>
+        <p>Nombre Completo: {{ fullname }}</p>
+      </ion-item>
+      <ion-item>
+        <p>Correo: {{ email }}</p>
+      </ion-item>
+      <ion-item>
+        <p>Vehículo: </p>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

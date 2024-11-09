@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
+import { RouteReuseStrategy, RouterModule } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
@@ -11,7 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { StorageService } from './services/storage.service';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { provideHttpClient, withInterceptorsFromDi, HttpClientModule } from '@angular/common/http';
-import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
+import { HomePageModule } from './pages/home/home.module';
+import { AuthService } from './services/auth.service';
+import { ProfilePageModule } from './pages/profile/profile.module';
+import { UsersPageModule } from './pages/users/users.module';
+import { MenuComponent } from './components/menu/menu.component';
 
 export function initApp(storageService: StorageService) {
   return () => storageService.init();
@@ -30,7 +34,7 @@ export function routeReuseStrategy() {
 }
 
 @NgModule({
-  declarations: [AppComponent, ModalComponent],
+  declarations: [AppComponent, ModalComponent, MenuComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
@@ -38,12 +42,13 @@ export function routeReuseStrategy() {
     FormsModule, 
     HttpClientModule,
     IonicStorageModule.forRoot(),
+    RouterModule,
   ],
   providers: [
-    SQLite,
     routeReuseStrategy(), 
     storageService(), 
     provideHttpClient(withInterceptorsFromDi()), 
+    AuthService 
     ],
   bootstrap: [AppComponent],
 })

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 import { UserService,User } from 'src/app/services/user.service';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+  selector: 'app-users',
+  templateUrl: './users.page.html',
+  styleUrls: ['./users.page.scss'],
 })
-export class AdminComponent implements OnInit {
+export class UsersPage implements OnInit {
 
+  userRole: number | null = null;
   users: User[] = [];
   newUser: User = {
     id: 0,
@@ -18,9 +20,10 @@ export class AdminComponent implements OnInit {
     role: 1
   };
 
-  constructor(private db: UserService) {}
+  constructor(private db: UserService, private authService: AuthService) {}
 
   ngOnInit() {
+    this.userRole = this.authService.getCurrentUserRole();
     this.users = this.db.getUsers();  // Cargar los usuarios al iniciar
   }
 
@@ -40,3 +43,4 @@ export class AdminComponent implements OnInit {
     this.users = this.db.getUsers();
   }
 }
+
