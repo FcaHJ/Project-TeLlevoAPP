@@ -47,7 +47,7 @@ export class LoginPage implements OnInit {
       this.generateMessage('Success login', 'success')
         .then(() => {
           console.log('Success login');
-          return this.router.navigateByUrl('/home')
+          return this.router.navigateByUrl('/loading')
         })
         .then(() => console.log('Navigated to home'));
     }

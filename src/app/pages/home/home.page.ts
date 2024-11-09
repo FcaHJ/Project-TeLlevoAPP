@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { User } from 'src/app/services/user.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -15,17 +15,17 @@ import { Capacitor } from '@capacitor/core';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit  {
 
   userRole: number | null = null;
   username!: string; 
   map: any; 
   showPrices: boolean = false;
   prices = [ 
-    { name: 'Viaje de 10 minutos', value: 2.00 },
-    { name: 'Viaje de 20 minutos', value: 6.50 },
-    { name: 'Viaje de 40 minutos', value: 15.00 },
-    { name: 'Viaje de 60 minutos', value: 21.00 },
+    { name: 'Viaje de 10 minutos', value: 2000 },
+    { name: 'Viaje de 20 minutos', value: 6500 },
+    { name: 'Viaje de 40 minutos', value: 9500 },
+    { name: 'Viaje de 60 minutos', value: 15000 },
   ];
   startLocation: string = '';
   endLocation: string = '';
@@ -38,12 +38,21 @@ export class HomePage implements OnInit {
   suggestionsEnd: any[] = [];
   userLatitude!: number;
   userLongitude!: number;
+  userMarker!: L.Marker;
   constructor(
     private authService: AuthService,
     private alertController:AlertController,
     private http: HttpClient,
     private locationService: LocationService,
     ) { this.getUserLocation(); }
+
+  userLocationIcon: L.Icon = new L.Icon({
+    iconUrl: 'assets/marker.svg', // URL de marcador rojo de Leaflet
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
 
   async ngOnInit() {
     this.userRole = this.authService.getCurrentUserRole();
@@ -52,10 +61,15 @@ export class HomePage implements OnInit {
     if (logged_user) {
       this.username = logged_user.username;
       console.log("Nombre de usuario:", this.username); // Verificar que el nombre de usuario esté presente
+      await this.getUserLocation();
     }else{
       logged_user = null;
     }
     this.getUserLocation();
+    this.loadMap();
+  }
+
+  ngAfterViewInit() {
     this.loadMap();
   }
 
@@ -64,31 +78,29 @@ export class HomePage implements OnInit {
     console.log(permission);
   }
 
+
   async loadMap() {
-    try{
+    try {
       const coordinates = await Geolocation.getCurrentPosition({ 
         enableHighAccuracy: true, 
-        timeout: 3000, 
-        maximumAge: 0 });
-
+        timeout: 1000, 
+        maximumAge: 0 
+      });
+  
       const { latitude, longitude } = coordinates.coords;
-
-      // Verificación de exactitud
-      if (coordinates.coords.accuracy && coordinates.coords.accuracy > 50) { // Ejemplo de precisión mínima
-        this.showAlert('Precisión baja', 'La ubicación puede no ser precisa. Intenta en un área con mejor señal.');
-      }
-
+  
       this.map = L.map('mapId').setView([latitude, longitude], 15);
-    
+  
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(this.map);
-    
-      L.marker([latitude, longitude])
+  
+      // Añadir marcador con el icono rojo para la ubicación del usuario
+      L.marker([latitude, longitude], { icon: this.userLocationIcon })
         .addTo(this.map)
         .bindPopup('Estás aquí.')
         .openPopup();
-    }catch(error){
+    } catch (error) {
       this.showAlert('Error', 'No se pudo obtener la ubicación. Por favor, verifica que los permisos estén activados o intenta de nuevo.');
     }
   }
@@ -99,71 +111,130 @@ export class HomePage implements OnInit {
     this.userLongitude = coordinates.coords.longitude;
   }*/
 
-    async getUserLocation() {
-      try {
-        if (Capacitor.isNativePlatform()) {
-          // Si es una plataforma nativa (Android/iOS), usa Capacitor Geolocation
-          const coordinates = await Geolocation.getCurrentPosition();
-          this.userLatitude = coordinates.coords.latitude;
-          this.userLongitude = coordinates.coords.longitude;
-        } else {
-          // Si es la web, usa la API estándar de geolocalización
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                this.userLatitude = position.coords.latitude;
-                this.userLongitude = position.coords.longitude;
-                console.log('Latitud:', this.userLatitude, 'Longitud:', this.userLongitude);
-              },
-              (error) => {
-                this.showAlert('Error', 'No se pudo obtener la ubicación en la web.');
-              }
-            );
-          } else {
-            this.showAlert('Error', 'Geolocalización no soportada en este navegador.');
-          }
-        }
-      } catch (error) {
-        console.error('Error al obtener la ubicación:', error);
-        this.showAlert('Error', 'No se pudo obtener la ubicación.');
-      }
+  recenterMap() {
+    this.map.setView([this.userLatitude, this.userLongitude], 15);
+  }
+
+  clearRoute() {
+    // Eliminar la ruta si existe
+    if (this.routeLayer) {
+      this.map.removeLayer(this.routeLayer);
+      this.routeLayer = null; // Reinicia la referencia a la ruta
     }
+  
+    // Eliminar el marcador de inicio si existe
+    if (this.startMarker) {
+      this.map.removeLayer(this.startMarker);
+      this.startMarker = null; // Reinicia la referencia al marcador de inicio
+    }
+  
+    // Eliminar el marcador de destino si existe
+    if (this.endMarker) {
+      this.map.removeLayer(this.endMarker);
+      this.endMarker = null; // Reinicia la referencia al marcador de destino
+    }
+  
+    // Limpiar los campos de búsqueda de ubicación
+    this.startLocation = '';
+    this.endLocation = '';
+  }
+
+  async getUserLocation() {
+    try {
+      if (Capacitor.isNativePlatform()) {
+        // Si es una plataforma nativa (Android/iOS), usa Capacitor Geolocation
+        const coordinates = await Geolocation.getCurrentPosition();
+        this.userLatitude = coordinates.coords.latitude;
+        this.userLongitude = coordinates.coords.longitude;
+      } else {
+        // Si es la web, usa la API estándar de geolocalización
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              this.userLatitude = position.coords.latitude;
+              this.userLongitude = position.coords.longitude;
+              console.log('Latitud:', this.userLatitude, 'Longitud:', this.userLongitude);
+            },
+            (error) => {
+              this.showAlert('Error', 'No se pudo obtener la ubicación en la web.');
+            }
+          );
+        } else {
+          this.showAlert('Error', 'Geolocalización no soportada en este navegador.');
+        }
+      }
+    } catch (error) {
+      console.error('Error al obtener la ubicación:', error);
+      this.showAlert('Error', 'No se pudo obtener la ubicación.');
+    }
+  }
 
   async calculateRoute() {
     if (!this.startLocation || !this.endLocation) {
       this.showAlert('Error', 'Por favor, ingresa tanto el punto de partida como el de llegada.');
       return;
     }
-
+  
     // Geocodificar la ubicación de inicio y destino
     const startUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.startLocation)}&format=json&limit=1`;
     const endUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.endLocation)}&format=json&limit=1`;
-
+  
     try {
       const startRes = await lastValueFrom(this.http.get<any[]>(startUrl));
       const endRes = await lastValueFrom(this.http.get<any[]>(endUrl));
-    
+  
       if (startRes.length > 0 && endRes.length > 0) {
         const startCoords = startRes[0];
         const endCoords = endRes[0];
-    
+  
         const startLatLng: [number, number] = [parseFloat(startCoords.lat), parseFloat(startCoords.lon)];
         const endLatLng: [number, number] = [parseFloat(endCoords.lat), parseFloat(endCoords.lon)];
-    
+  
         // Colocar marcadores en el mapa
         if (this.startMarker) this.map.removeLayer(this.startMarker);
         if (this.endMarker) this.map.removeLayer(this.endMarker);
-    
+  
         this.startMarker = L.marker(startLatLng).addTo(this.map).bindPopup('Punto de Partida').openPopup();
-        this.endMarker = L.marker(endLatLng).addTo(this.map).bindPopup('Punto de Llegada').openPopup();
-    
+  
+        // Este es el marcador de destino que queremos arrastrar
+        this.endMarker = L.marker(endLatLng, { draggable: true })
+          .addTo(this.map)
+          .bindPopup('Punto de Llegada')
+          .openPopup();
+  
+        // Evento para manejar el cambio de posición al arrastrar el marcador
+        this.endMarker.on('dragend', async (event: L.LeafletEvent) => {
+          const marker = event.target;
+          const position = marker.getLatLng();
+          
+          // Actualiza el punto de destino con las nuevas coordenadas
+          this.endLocation = `${position.lat},${position.lng}`;
+          
+          // Realizar geocodificación inversa para obtener la dirección
+          const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${position.lat}&lon=${position.lng}&format=json`;
+          try {
+            const res = await this.http.get<any>(geocodeUrl).toPromise();
+            if (res && res.display_name) {
+              this.endLocation = res.display_name; // Muestra la dirección en el buscador
+            } else {
+              this.endLocation = `${position.lat},${position.lng}`; // Si falla, usa las coordenadas
+            }
+          } catch (error) {
+            console.error('Error en geocodificación inversa:', error);
+            this.endLocation = `${position.lat},${position.lng}`; // Usa las coordenadas si hay error
+          }
+        
+          // Recalcula la ruta con las nuevas coordenadas del destino
+          this.drawRoute(startLatLng, [position.lat, position.lng]);
+        });
+  
         // Centrar el mapa entre los dos puntos
         const bounds = L.latLngBounds(startLatLng, endLatLng);
         this.map.fitBounds(bounds);
-    
-        // Trazar ruta entre los puntos
+  
+        // Trazar la ruta inicial
         this.drawRoute(startLatLng, endLatLng);
-    
+  
       } else {
         this.showAlert('Ubicación no encontrada', 'No se encontraron las ubicaciones especificadas. Intenta nuevamente.');
       }

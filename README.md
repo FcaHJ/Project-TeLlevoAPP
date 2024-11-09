@@ -8,7 +8,7 @@ npm install @ionic/storage-angular
 
 ---
 
-### Correr API de usarios en una terminal aparte para el correcto funcionamiento de la app:
+### Correr API de usuarios en una terminal aparte para el correcto funcionamiento de la app:
 
 ### `nodemon index.js`
 
