@@ -6,7 +6,11 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUser: User | null = null;
+
+  currentUser: User | null = null;
+  isLogged: boolean = false;
+
+  private readonly logged_user_key = 'logged_user';
 
   constructor(private userService: UserService, private storage: StorageService) {
     this.loadCurrentUser(); 
@@ -45,11 +49,40 @@ export class AuthService {
     }
   }
 
-// Función para cerrar sesión
-  async logout(){
+  async isAuthenticated() {
+    console.log("Checking if user is authenticated...");
+    
+    // Verifica si hay un usuario en memoria
+    if (this.currentUser) {
+      console.log('User exists in memory');
+      return true;
+    }
+  
+    // Si no está en memoria, verifica en el almacenamiento
+    const user = await this.storage.get(this.logged_user_key);
+    
+    if (user) {
+      console.log('User found in storage, setting currentUser');
+      this.isLogged = true;
+      this.currentUser = user;
+      return true;
+    }
+    
+    console.log('No user found');
+    return false;
+  }
+
+  async logout() {
     await this.storage.clearCurrentUser();  // Limpiar el usuario en almacenamiento local
     this.currentUser = null;
+    this.isLogged = false;
   }
+
+// Función para cerrar sesión
+  /*async logout(){
+    await this.storage.clearCurrentUser();  // Limpiar el usuario en almacenamiento local
+    this.currentUser = null;
+  }*/
 
   //Obtener el usuario actual
   getCurrentUser(): User | null {

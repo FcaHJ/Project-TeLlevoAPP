@@ -18,7 +18,7 @@ app.listen(PORT, () => {
 
 
 let users = [
-  { id: 1, username: 'Admin', fullname: 'Administardor', password: 'admin123',  email:'admin@duoc.cl', role: 1 },
+  { id: 1, username: 'Admin', fullname: 'Administrador', password: 'admin123',  email:'admin@duoc.cl', role: 1 },
   { id: 2, username: 'Pasajero', fullname: 'Pasajero Prueba', password: 'pasajero123',  email:'pasajero@duoc.cl', role: 2 },
   { id: 3, username: 'Conductor', fullname: 'Conductor Prueba', password: 'conductor123',  email:'conductor@duoc.cl', role: 3 },
 ];

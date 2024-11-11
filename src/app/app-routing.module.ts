@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { ProfilePage } from './pages/profile/profile.page';
-import { HomePage } from './pages/home/home.page';
-import { UsersPage } from './pages/users/users.page';
+import { NonAuthenticationGuard } from './guards/non-auth.guard';
+import { AuthenticationGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -12,18 +11,22 @@ const routes: Routes = [
   },
   {
     path: 'login',
+    canActivate: [NonAuthenticationGuard],
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
     path: 'home', 
+    canActivate: [AuthenticationGuard],
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
     path: 'users',
+    canActivate: [AuthenticationGuard],
     loadChildren: () => import('./pages/users/users.module').then( m => m.UsersPageModule)
   },
   {
     path: 'profile',
+    canActivate: [AuthenticationGuard],
     loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
   },
   {
@@ -32,6 +35,7 @@ const routes: Routes = [
   },
   {
     path: 'loading',
+    canActivate: [AuthenticationGuard],
     loadChildren: () => import('./pages/loading/loading.module').then( m => m.LoadingPageModule)
   },
   {

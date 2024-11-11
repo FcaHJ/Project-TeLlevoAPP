@@ -1,15 +1,3 @@
-import { CanActivateFn } from '@angular/router';
-
-export const nonAuthGuard: CanActivateFn = (route, state) => {
-  return true;
-};
-
-/*import { CanActivateFn } from '@angular/router';
-
-export const authGuard: CanActivateFn = (route, state) => {
-  return true;
-};*/
-
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { AuthService } from "../services/auth.service";
@@ -29,6 +17,6 @@ export class NonAuthenticationGuard implements CanActivate {
             console.log('User is authenticated, redirecting to Home!')
             await this.router.navigate(['/home']);
         }
-        return auth;
+        return !auth;
     }
 }

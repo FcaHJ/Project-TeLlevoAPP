@@ -1,9 +1,3 @@
-/*import { CanActivateFn } from '@angular/router';
-
-export const authGuard: CanActivateFn = (route, state) => {
-  return true;
-};*/
-
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { AuthService } from "../services/auth.service";
@@ -16,6 +10,7 @@ export class AuthenticationGuard implements CanActivate {
         private readonly router: Router,
         private readonly authService: AuthService
     ){ }
+    
     async canActivate() {
         console.log('Executing guard!')
         const auth = await this.authService.isAuthenticated();
