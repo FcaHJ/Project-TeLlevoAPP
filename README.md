@@ -8,6 +8,12 @@ npm install @ionic/storage-angular
 
 ---
 
+Instalación nodemon:
+
+npm install -g nodemon
+
+---
+
 ### Correr API de usuarios en una terminal aparte para el correcto funcionamiento de la app:
 
 ### `nodemon index.js`
