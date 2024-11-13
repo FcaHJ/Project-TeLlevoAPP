@@ -7,23 +7,20 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <!-- Recorre y muestra los elementos del menú -->
-      <ion-item *ngFor="let item of menuItems">
-        [routerLink]="item.url">{{ item.title }}
-      </ion-item>>
-      <!--ion-item *ngIf="userRole === 2">
+      <ion-item *ngIf="userRole === 2">
         <a href="/home">Inicio</a>
       </ion-item>
       <ion-item *ngIf="userRole === 3">
         <a href="/home-driver">Inicio</a>
       </ion-item>
-      <ion-item *ngIf="userRole === 1">
+      <ion-item *ngIf="userRole === 1"> 
         <a href="/users">Usuarios</a>
       </ion-item>
       <ion-item>
         <a href="/profile">Perfil</a>
-      </ion-item>-->
+      </ion-item>
     </ion-list>
+
     <!-- Botón de cierre de sesión -->
     <button (click)="logout()">
       <ion-icon name="log-out-outline" class="icon-logout"></ion-icon>

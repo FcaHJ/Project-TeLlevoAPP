@@ -51,26 +51,31 @@ export class AuthService {
   }
 
   async isAuthenticated() {
+    
     console.log("Checking if user is authenticated...");
-    
-    // Verifica si hay un usuario en memoria
-    if (this.currentUser) {
-      console.log('User exists in memory');
-      return true;
-    }
+    try {
+      // Verifica si hay un usuario en memoria
+      if (this.currentUser) {
+        console.log('User exists in memory');
+        return true;
+      }
   
-    // Si no está en memoria, verifica en el almacenamiento
-    const user = await this.storage.get(this.logged_user_key);
-    
-    if (user) {
-      console.log('User found in storage, setting currentUser');
-      this.isLogged = true;
-      this.currentUser = user;
-      return true;
+      // Si no está en memoria, verifica en el almacenamiento
+      const user = await this.storage.get(this.logged_user_key);
+      
+      if (user) {
+        console.log('User found in storage, setting currentUser');
+        this.isLogged = true;
+        this.currentUser = user;
+        return true;
+      }
+  
+      console.log('No user found');
+      return false;
+    } catch (error) {
+      console.error("Error checking authentication", error);
+      return false; // O manejar el error de manera adecuada
     }
-    
-    console.log('No user found');
-    return false;
   }
 
   async logout() { 
