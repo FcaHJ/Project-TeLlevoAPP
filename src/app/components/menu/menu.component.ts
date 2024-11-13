@@ -26,33 +26,11 @@ export class MenuComponent  implements OnInit {
   ) {}
 
   ngOnInit() {
-    /*
-    if (this.userRole === 1) {  // Admin
-      this.menuItems = [
-        { title: 'Usuarios', url: '/users' },
-        { title: 'Inicio', url: '/home' },
-      ];
-    } else if (this.userRole === 2) {  // Pasajero
-      this.menuItems = [
-        { title: 'Inicio', url: '/home' },
-        { title: 'Perfil', url: '/profile' },
-      ];
-    } else if (this.userRole === 3) {  // Conductor
-      this.menuItems = [
-        { title: 'Inicio', url: '/home' },
-        { title: 'Perfil', url: '/profile' },
-      ];
-    } else {  // Usuario no autenticado
-      this.menuItems = [
-        { title: 'Inicio', url: '/home' },
-      ];
-    }*/
+    this.userRole = this.authService.getCurrentUserRole();
+    console.log('User role:', this.userRole); 
   }
-  
 
-  
-
- /* isAdmin() {
+  isAdmin() {
     return this.userRole === 1; 
   }
 
@@ -69,7 +47,8 @@ export class MenuComponent  implements OnInit {
     if (this.isAdmin()) {
       return [
         { title: 'Usuarios', url: '/users' },
-        //{ title: 'Actividad', url: '/users-act' },
+        { title: 'Perfil', url: '/profile' },
+        //{ title: 'Actividad', url: '/dashabord' },
       ];
     } else if (this.isPassenger()) {
       return [
@@ -79,22 +58,13 @@ export class MenuComponent  implements OnInit {
       ];
     }else if (this.isDriver()) {
       return [
-        { title: 'Inicio', url: '/home' },
+        { title: 'Inicio', url: '/home-driver' },
         { title: 'Perfil', url: '/profile' },
         // Otros ítems de conductor
       ];
-    } else {
-      return [
-        { title: 'Inicio', url: '/home' },
-        // Menú para usuarios no autenticados 
-      ];
     }
-  }*/
-
-  navigateTo(url: string) {
-    this.router.navigateByUrl(url);  // Redirige a la URL especificada
-    }
-
+    return [];
+  }
 
   // Función para cerrar sesión
   async logout() {

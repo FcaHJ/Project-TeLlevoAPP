@@ -34,6 +34,7 @@ export class AuthService {
     if (user && user.password === password) {
       this.currentUser = user;
       await this.storage.saveCurrentUser(user);  // Guardar usuario en almacenamiento local
+      console.log("ROL ACTUAL DE USUARIO: ", this.currentUser.role);
       return user;
     }
     return null;
@@ -72,17 +73,11 @@ export class AuthService {
     return false;
   }
 
-  async logout() {
+  async logout() { 
     await this.storage.clearCurrentUser();  // Limpiar el usuario en almacenamiento local
     this.currentUser = null;
     this.isLogged = false;
   }
-
-// Función para cerrar sesión
-  /*async logout(){
-    await this.storage.clearCurrentUser();  // Limpiar el usuario en almacenamiento local
-    this.currentUser = null;
-  }*/
 
   //Obtener el usuario actual
   getCurrentUser(): User | null {
@@ -91,7 +86,8 @@ export class AuthService {
 
   // Obtener el rol del usuario actual
   getCurrentUserRole(): number | null {
-    return this.currentUser ? this.currentUser.role : null;
+    return this.currentUser?.role || null;
+    //return this.currentUser ? this.currentUser.role : null;
   }
 
   // Método para recuperar usuario por su nombre de usuario

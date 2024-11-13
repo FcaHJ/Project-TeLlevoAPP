@@ -12,7 +12,8 @@ export class AppComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.authService.loadCurrentUser();
     // Obtiene el rol del usuario desde el servicio de autenticación
     this.userRole = this.authService.getCurrentUserRole();
   }
