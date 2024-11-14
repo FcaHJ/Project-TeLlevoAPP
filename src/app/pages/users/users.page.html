@@ -1,34 +1,85 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
+    <ion-title>Gestión de Usuarios</ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button> 
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <h3>Lista de Usuarios</h3>
-  <ul>
-    <li *ngFor="let user of users">
-      {{ user.username }} - {{ user.email }} - {{ user.fullname }}
-      <button (click)="updateUser(user)">Actualizar</button>
-      <button (click)="deleteUser(user.id)">Eliminar</button>
-    </li>
-  </ul>
+  <!-- Lista de Usuarios -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Lista de Usuarios</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let user of users" lines="full">
+          <ion-label>
+            <h2>{{ user.username }}</h2>
+            <p>{{ user.email }} - {{ user.fullname }}</p>
+          </ion-label>
+          <ion-buttons slot="end">
+            <ion-button color="tertiary" (click)="updateUser(user)">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button color="danger" (click)="deleteUser(user.id)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
-  <h3>Agregar Nuevo Usuario</h3>
-  <form (ngSubmit)="createUser()">
-    <input type="text" [(ngModel)]="newUser.username" name="username" placeholder="Username" required>
-    <input type="email" [(ngModel)]="newUser.email" name="email" placeholder="Email" required>
-    <input type="password" [(ngModel)]="newUser.password" name="password" placeholder="Password" required>
-    <input type="text" [(ngModel)]="newUser.fullname" name="fullname" placeholder="Full Name" required>
-    <ion-label>Selecciona Rol</ion-label>
-      <ion-select [(ngModel)]="newUser.role" name="role" placeholder="Role" required>
-        <ion-select-option value="1">Admin</ion-select-option>
-        <ion-select-option value="2">Pasajero</ion-select-option>
-        <ion-select-option value="3">Conductor</ion-select-option>
-      </ion-select>
-    <button type="submit">Agregar Usuario</button>
-  </form>
+  <!-- Formulario para Agregar Nuevo Usuario -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Agregar Nuevo Usuario</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="createUser()" class="form-container">
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input type="text" [(ngModel)]="newUser.username" name="username" required></ion-input>
+        </ion-item>
 
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" [(ngModel)]="newUser.email" name="email" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input type="password" [(ngModel)]="newUser.password" name="password" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Full Name</ion-label>
+          <ion-input type="text" [(ngModel)]="newUser.fullname" name="fullname" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Selecciona Rol</ion-label>
+          <ion-select [(ngModel)]="newUser.role" name="role" placeholder="Role" required>
+            <ion-select-option value="1">Admin</ion-select-option>
+            <ion-select-option value="2">Pasajero</ion-select-option>
+            <ion-select-option value="3">Conductor</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" color="primary">Agregar Usuario</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+<!-- Opcional: Agregar un estilo personalizado -->
+<style>
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+</style>
