@@ -11,6 +11,7 @@ export class UsersPage implements OnInit {
 
   userRole: number | null = null;
   users: User[] = [];
+  username!: string;
   newUser: User = {
     id: 0,
     username: '',
@@ -25,6 +26,15 @@ export class UsersPage implements OnInit {
   ngOnInit() {
     this.userRole = this.authService.getCurrentUserRole();
     this.users = this.db.getUsers();  // Cargar los usuarios al iniciar
+    
+    //Muestra el nombre de usuario
+    let logged_user = this.authService.getCurrentUser();
+    if (logged_user) {
+      this.username = logged_user.username;
+      console.log("Nombre de usuario:", this.username); // Verificar que el nombre de usuario esté presente
+    }else{
+      logged_user = null;
+    }
   }
 
   createUser() {
