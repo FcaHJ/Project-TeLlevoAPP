@@ -13,10 +13,12 @@ export class NonAuthenticationGuard implements CanActivate {
     async canActivate() {
         console.log('Executing no-guard!')
         const auth = await this.authService.isAuthenticated();
-        if (auth) {
+        if (!auth) {
+            return true;
+        }else{
             console.log('User is authenticated, redirecting to Home!')
-            await this.router.navigate(['/home']);
+            await this.router.navigate(['/loading']);
+            return false;
         }
-        return !auth;
     }
 }

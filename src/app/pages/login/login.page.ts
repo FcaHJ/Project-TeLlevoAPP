@@ -13,6 +13,7 @@ export class LoginPage implements OnInit {
  
   username!: string;
   password!: string;
+  showPassword: boolean = false;
     
   constructor( 
       private toastController: ToastController, 
@@ -29,6 +30,10 @@ export class LoginPage implements OnInit {
     const user = await this.authService.authenticate(this.username, this.password);
     this.authenticateHandler(user);
   }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;  // Alterna entre visible y no visible
+  }
    
   private authenticateHandler(user: User | null) {
       if (user) {
@@ -44,6 +49,7 @@ export class LoginPage implements OnInit {
     }
   
     private successAuthentication() {
+      
       this.generateMessage('Success login', 'success')
         .then(() => {
           console.log('Success login');

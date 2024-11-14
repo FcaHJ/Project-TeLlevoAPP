@@ -6,19 +6,19 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-list>
-      <ion-item *ngIf="userRole === 2">
-        <a href="/home">Inicio</a>
-      </ion-item>
-      <ion-item *ngIf="userRole === 3">
-        <a href="/home-driver">Inicio</a>
-      </ion-item>
-      <ion-item *ngIf="userRole === 1"> 
-        <a href="/users">Usuarios</a>
-      </ion-item>
-      <ion-item>
-        <a href="/profile">Perfil</a>
-      </ion-item>
+    <ion-list *ngIf="userRole === 1">
+      <ion-item routerLink="/users">Usuarios</ion-item>
+      <ion-item routerLink="/profile">Perfil</ion-item>
+    </ion-list>
+
+    <ion-list *ngIf="userRole === 2">
+      <ion-item routerLink="/home">Inicio</ion-item>
+      <ion-item routerLink="/profile">Perfil</ion-item>
+    </ion-list>
+
+    <ion-list *ngIf="userRole === 3">
+      <ion-item routerLink="/home-driver">Inicio</ion-item>
+      <ion-item routerLink="/profile">Perfil</ion-item>
     </ion-list>
 
     <!-- Botón de cierre de sesión -->

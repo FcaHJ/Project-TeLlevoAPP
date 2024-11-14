@@ -24,7 +24,8 @@
         <ion-input [(ngModel)]="username" label="Nombre de usuario" type="text" labelPlacement="stacked"></ion-input>
       </ion-item>
       <ion-item color="secondary">
-        <ion-input [(ngModel)]="password" label="Contraseña" type="password" labelPlacement="stacked"></ion-input>
+        <ion-input [(ngModel)]="password" label="Contraseña" type="password" [type]="showPassword ? 'text' : 'password'"  labelPlacement="stacked"></ion-input>
+        <ion-icon class="icon-login" name="{{ showPassword ? 'eye-off' : 'eye' }}" slot="end" (click)="togglePasswordVisibility()"></ion-icon>
       </ion-item>
     </ion-list>
     <br>

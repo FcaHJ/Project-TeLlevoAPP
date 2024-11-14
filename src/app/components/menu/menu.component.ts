@@ -25,9 +25,17 @@ export class MenuComponent  implements OnInit {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {
-    this.userRole = this.authService.getCurrentUserRole();
-    console.log('User role:', this.userRole); 
+  async ngOnInit() {
+    this.updateUserRole();
+  }
+
+  // Método para obtener el rol actualizado
+  updateUserRole() {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.userRole = currentUser.role;
+      this.username = currentUser.username;
+    }
   }
 
   isAdmin() {

@@ -57,7 +57,7 @@ export class AuthService {
       // Verifica si hay un usuario en memoria
       if (this.currentUser) {
         console.log('User exists in memory');
-        return true;
+        return true;  
       }
   
       // Si no está en memoria, verifica en el almacenamiento
@@ -80,6 +80,7 @@ export class AuthService {
 
   async logout() { 
     await this.storage.clearCurrentUser();  // Limpiar el usuario en almacenamiento local
+    await this.storage.remove(this.logged_user_key);
     this.currentUser = null;
     this.isLogged = false;
   }
