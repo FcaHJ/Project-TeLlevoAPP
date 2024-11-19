@@ -1,12 +1,58 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button> 
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-title>Añadir Información del Vehículo</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
   <p class="bienvenido ion-text-right">Bienvenido {{username}}!</p>
 
+  <!-- Formulario de Información del Vehículo -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Información del Vehículo</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="guardarInfoVehiculo()" class="form-container">
+        <ion-item>
+          <ion-label position="floating">Modelo</ion-label>
+          <ion-input type="text" [(ngModel)]="modelo" name="modelo" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Capacidad</ion-label>
+          <ion-input type="number" [(ngModel)]="capacidad" name="capacidad" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Patente</ion-label>
+          <ion-input type="text" [(ngModel)]="patente" name="patente" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Color</ion-label>
+          <ion-input type="text" [(ngModel)]="color" name="color" required></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" color="primary">Guardar Información</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+<!-- Opcional: Agregar un estilo personalizado -->
+<style>
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bienvenido {
+    padding: 10px;
+    font-size: 1.2em;
+  }
+</style>
