@@ -76,3 +76,8 @@ ion-input {
     --background: transparent; /* Para asegurar que el fondo no sea blanco */
   }
   
+  ion-card-content p {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+  }

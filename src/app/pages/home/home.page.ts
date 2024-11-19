@@ -116,27 +116,21 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   clearRoute() {
-    // Eliminar la ruta si existe
     if (this.routeLayer) {
       this.map.removeLayer(this.routeLayer);
-      this.routeLayer = null; // Reinicia la referencia a la ruta
+      this.routeLayer = null;
     }
-  
-    // Eliminar el marcador de inicio si existe
     if (this.startMarker) {
       this.map.removeLayer(this.startMarker);
-      this.startMarker = null; // Reinicia la referencia al marcador de inicio
+      this.startMarker = null;
     }
-  
-    // Eliminar el marcador de destino si existe
     if (this.endMarker) {
       this.map.removeLayer(this.endMarker);
-      this.endMarker = null; // Reinicia la referencia al marcador de destino
+      this.endMarker = null;
     }
-  
-    // Limpiar los campos de búsqueda de ubicación
     this.startLocation = '';
     this.endLocation = '';
+    this.routeDetails = null; // Limpiar los detalles
   }
 
   async getUserLocation() {
@@ -245,24 +239,68 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   async drawRoute(startLatLng: [number, number], endLatLng: [number, number]) {
-    const routeUrl = `https://router.project-osrm.org/route/v1/driving/${startLatLng[1]},${startLatLng[0]};${endLatLng[1]},${endLatLng[0]}?geometries=geojson`;
-
+    const routeUrl = `https://router.project-osrm.org/route/v1/driving/${startLatLng[1]},${startLatLng[0]};${endLatLng[1]},${endLatLng[0]}?overview=full&geometries=geojson&steps=true`;
+  
     try {
       const routeRes = await this.http.get<any>(routeUrl).toPromise();
       const route = routeRes.routes[0];
-
+  
+      if (!route) {
+        this.showAlert('Error', 'No se encontró una ruta válida.');
+        return;
+      }
+  
+      // Detalles de la ruta
+      const distanceKm = route.distance / 1000; 
+      const durationMin = route.duration / 60; 
+      const estimatedPrice = this.calculatePrice(distanceKm, durationMin);
+  
       // Eliminar la ruta anterior, si existe
       if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
       }
-
+  
       const routeCoordinates = route.geometry.coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
       this.routeLayer = L.polyline(routeCoordinates, { color: 'blue', weight: 5 }).addTo(this.map);
-
+  
+      // Mostrar detalles
+      this.showRouteDetails(distanceKm, durationMin, estimatedPrice);
+  
     } catch (error) {
       console.error('Error al trazar la ruta:', error);
       this.showAlert('Error', 'No se pudo trazar la ruta entre los puntos.');
     }
+  }
+
+  calculatePrice(distanceKm: number, durationMin: number): number {
+    const baseRate = 50; 
+    const perKmRate = 10; 
+    const perMinRate = 2;
+  
+    return baseRate + (distanceKm * perKmRate) + (durationMin * perMinRate);
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+    }).format(value);
+  }
+
+  routeDetails: {
+    distanceKm: number;
+    durationMin: number;
+    estimatedPrice: number;
+    formattedPrice: string;
+  } | null = null;
+
+  showRouteDetails(distanceKm: number, durationMin: number, estimatedPrice: number) {
+    this.routeDetails = {
+      distanceKm: parseFloat(distanceKm.toFixed(2)),
+      durationMin: parseFloat(durationMin.toFixed(0)),
+      estimatedPrice: estimatedPrice, 
+      formattedPrice: this.formatCurrency(estimatedPrice), 
+    };
   }
 
   async showAlert(header: string, message: string) {
@@ -276,17 +314,19 @@ export class HomePage implements OnInit, AfterViewInit  {
 
   onSearchChange(event: any, type: string) {
     const query = event.detail.value;
-    const radius = 5000; // 5 km de radio, puedes ajustarlo según necesites
-  
+    const radius = 5000;  // Radio de búsqueda de 5 km
     if (query.length > 2) {
       this.locationService
         .searchLocation(query, this.userLatitude, this.userLongitude, radius)
         .subscribe((results: any) => {
+          console.log(results);  
           if (type === 'start') {
-            this.suggestionsStart = results;
+            this.suggestionsStart = results; 
           } else {
             this.suggestionsEnd = results;
           }
+        }, error => {
+          console.error('Error al obtener los resultados de Nominatim:', error);  
         });
     } else {
       if (type === 'start') {
