@@ -7,21 +7,60 @@
 </ion-header>
 
 <ion-content>
-  <div class="user-data">
-    <ion-list>
-      <p class="a">[Foto usuario]</p>
-      <ion-item>
-        <p>Nombre Usuario: {{ username }}</p>
-      </ion-item>
-      <ion-item>
-        <p>Nombre Completo: {{ fullname }}</p>
-      </ion-item>
-      <ion-item>
-        <p>Correo: {{ email }}</p>
-      </ion-item>
-      <ion-item>
-        <p>Vehículo: </p>
-      </ion-item>
-    </ion-list>
-  </div>
+  <ion-card class="data">
+    <ion-card-header>
+      <ion-card-title></ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+        <ion-list lines="none">
+          <ion-icon name="person-sharp"></ion-icon>
+          <ion-item>
+            <p>Nombre Usuario: {{ username }}</p>
+          </ion-item>
+          <ion-item>
+            <p>Nombre Completo: {{ fullname }}</p>
+          </ion-item>
+          <ion-item>
+            <p>Correo: {{ email }}</p>
+          </ion-item>
+          <ion-item>
+            <p>Contraseña: {{ password }}</p>
+          </ion-item>
+        </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Formulario de Información del Vehículo -->
+  <ion-card class="data" *ngIf="userRole === 3">
+    <ion-card-header>
+      <ion-card-title>Información del Vehículo</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="guardarInfoVehiculo()" class="form-container">
+        <ion-item>
+          <ion-label position="floating">Modelo</ion-label>
+          <ion-input type="text" [(ngModel)]="modelo" name="modelo" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Capacidad</ion-label>
+          <ion-input type="number" [(ngModel)]="capacidad" name="capacidad" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Patente</ion-label>
+          <ion-input type="text" [(ngModel)]="patente" name="patente" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Color</ion-label>
+          <ion-input type="text" [(ngModel)]="color" name="color" required></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" color="primary">Guardar Información</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+

@@ -32,35 +32,18 @@
         {{ suggestion.display_name }}
       </ion-item>
     </ion-list>
-    <ion-button class="btn-home custom-button" (click)="togglePrices()"(ionInput)="onSearchChange($event, 'end')">
-      Ver detalles de ruta
-    </ion-button>
     <ion-button class="btn-home" (click)="calculateRoute()">Ver Ruta</ion-button>
     <ion-button class="btn-home custom-button">Programar viaje</ion-button>
     <ion-button (click)="recenterMap()">Centrar en mi ubicación</ion-button>
     <ion-button (click)="clearRoute()">Reiniciar búsqueda</ion-button>
 
-    <ion-list *ngIf="showPrices">
-      <ion-card *ngIf="routeDetails">
-        <ion-card-header>
-          <ion-card-title>Detalles de la ruta</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>Distancia: {{ routeDetails.distanceKm }} km</p>
-          <p>Tiempo estimado: {{ routeDetails.durationMin }} minutos</p>
-          <p>Precio estimado: ${{ routeDetails.estimatedPrice }}</p>
-        </ion-card-content>
-      </ion-card>
-      
-      <ion-card *ngIf="!routeDetails">
-        <ion-card-content>
-          <p>Selecciona una ruta para ver los detalles.</p>
-        </ion-card-content>
-      </ion-card>
-    </ion-list>
+    <div *ngIf="routeDetails">
+      <p>Distancia: {{ routeDetails.distanceKm }} km</p>
+      <p>Duración: {{ routeDetails.durationMin }} min</p>
+      <p>Tarifa Estimada: {{ routeDetails.formattedPrice }}</p>
+    </div>
   </div>
-
-  <ion-content>
+  
     <div id="mapId"></div>
-  </ion-content>
+  
 </ion-content>

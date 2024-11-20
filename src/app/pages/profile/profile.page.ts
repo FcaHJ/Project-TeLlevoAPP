@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { User } from 'src/app/services/user.service';
+import { Storage } from '@ionic/storage-angular';
+import { AlertController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +21,16 @@ export class ProfilePage implements OnInit {
   password!: string;
   fullname!: string;
 
-  constructor(private storageService: StorageService, private authService: AuthService) { }
+  modelo: string | undefined;
+  capacidad: number | undefined;
+  patente: string | undefined;
+  color: string | undefined;
+
+  constructor(
+    private storageService: StorageService, 
+    private authService: AuthService, 
+    private storage: Storage,
+    private alertController: AlertController,) { }
 
   async ngOnInit() {
     this.userRole = this.authService.getCurrentUserRole();
@@ -30,5 +42,26 @@ export class ProfilePage implements OnInit {
       this.password = logged_user.password;
       this.fullname = logged_user.fullname;
     }
+  }
+
+  // Método para guardar la información del vehículo
+  async guardarInfoVehiculo() {
+    const vehiculoData = {
+      modelo: this.modelo,
+      capacidad: this.capacidad,
+      patente: this.patente,
+      color: this.color,
+    };
+
+    // Guardar en el almacenamiento local
+    await this.storage.set('vehiculoInfo', vehiculoData);
+
+    // Mostrar alerta de confirmación
+    const alert = await this.alertController.create({
+      header: 'Éxito',
+      message: 'Información del vehículo guardada correctamente',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

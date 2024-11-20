@@ -8,6 +8,8 @@ import { AlertController, MenuController } from '@ionic/angular';
 import { lastValueFrom } from 'rxjs';
 import { LocationService } from 'src/app/services/location.service';
 import { Capacitor } from '@capacitor/core';
+import { RateService } from 'src/app/services/rate.service';
+
 
 
 @Component({
@@ -17,16 +19,12 @@ import { Capacitor } from '@capacitor/core';
 })
 export class HomePage implements OnInit, AfterViewInit  {
 
+
   userRole: number | null = null;
   username!: string; 
+
   map: any; 
-  showPrices: boolean = false;
-  prices = [ 
-    { name: 'Viaje de 10 minutos', value: 2000 },
-    { name: 'Viaje de 20 minutos', value: 6500 },
-    { name: 'Viaje de 40 minutos', value: 9500 },
-    { name: 'Viaje de 60 minutos', value: 15000 },
-  ];
+  
   startLocation: string = '';
   endLocation: string = '';
   startMarker: any;
@@ -39,35 +37,40 @@ export class HomePage implements OnInit, AfterViewInit  {
   userLatitude!: number;
   userLongitude!: number;
   userMarker!: L.Marker;
+
   constructor(
     private authService: AuthService,
-    private alertController:AlertController,
+    private alertController: AlertController,
+    //private storage: Storage, // Añadimos el servicio Storage
     private http: HttpClient,
     private locationService: LocationService,
-    ) { this.getUserLocation(); }
+    private rateService: RateService
+    ) { }
 
   userLocationIcon: L.Icon = new L.Icon({
-    iconUrl: 'assets/marker.svg', // URL de marcador rojo de Leaflet
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
+      iconUrl: 'assets/marker.svg', // URL de marcador rojo de Leaflet
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
+    });
 
   async ngOnInit() {
     this.userRole = this.authService.getCurrentUserRole();
-    //Muestra el nombre de usuario
+    
+    // Muestra el nombre de usuario
     let logged_user = this.authService.getCurrentUser();
     if (logged_user) {
       this.username = logged_user.username;
-      console.log("Nombre de usuario:", this.username); // Verificar que el nombre de usuario esté presente
+      console.log("Nombre de usuario:", this.username);
       await this.getUserLocation();
-    }else{
+    } else {
       logged_user = null;
     }
     this.getUserLocation();
     this.loadMap();
   }
+
 
   ngAfterViewInit() {
     this.loadMap();
@@ -83,7 +86,7 @@ export class HomePage implements OnInit, AfterViewInit  {
     try {
       const coordinates = await Geolocation.getCurrentPosition({ 
         enableHighAccuracy: true, 
-        timeout: 1000, 
+        timeout: 5000, 
         maximumAge: 0 
       });
   
@@ -104,12 +107,6 @@ export class HomePage implements OnInit, AfterViewInit  {
       this.showAlert('Error', 'No se pudo obtener la ubicación. Por favor, verifica que los permisos estén activados o intenta de nuevo.');
     }
   }
-
- /* async getUserLocation() {
-    const coordinates = await Geolocation.getCurrentPosition();
-    this.userLatitude = coordinates.coords.latitude;
-    this.userLongitude = coordinates.coords.longitude;
-  }*/
 
   recenterMap() {
     this.map.setView([this.userLatitude, this.userLongitude], 15);
@@ -183,6 +180,27 @@ export class HomePage implements OnInit, AfterViewInit  {
   
         const startLatLng: [number, number] = [parseFloat(startCoords.lat), parseFloat(startCoords.lon)];
         const endLatLng: [number, number] = [parseFloat(endCoords.lat), parseFloat(endCoords.lon)];
+        
+        /*********/
+        // Calcular la ruta usando OSRM
+        const routeResponse = await lastValueFrom(this.rateService.calcularRuta(startLatLng, endLatLng));
+
+        const distanceKm = routeResponse.routes[0].legs[0].distance / 1000;
+        const durationMin = routeResponse.routes[0].legs[0].duration / 60;
+
+        // Calcular la tarifa
+        const estimatedPrice = this.rateService.calcularTarifa(distanceKm, durationMin);
+
+        this.showRouteDetails(distanceKm, durationMin, estimatedPrice);
+
+        // Dibujar la ruta en el mapa
+        if (this.routeLayer) {
+          this.map.removeLayer(this.routeLayer);
+        }
+
+        this.routeLayer = L.geoJSON(routeResponse.routes[0].geometry).addTo(this.map);
+
+        /************/
   
         // Colocar marcadores en el mapa
         if (this.startMarker) this.map.removeLayer(this.startMarker);
@@ -229,9 +247,7 @@ export class HomePage implements OnInit, AfterViewInit  {
         // Trazar la ruta inicial
         this.drawRoute(startLatLng, endLatLng);
   
-      } else {
-        this.showAlert('Ubicación no encontrada', 'No se encontraron las ubicaciones especificadas. Intenta nuevamente.');
-      }
+      } 
     } catch (error) {
       console.error('Error en la búsqueda de ubicaciones:', error);
       this.showAlert('Error', 'Ocurrió un problema al buscar las ubicaciones. Intenta nuevamente.');
@@ -347,8 +363,4 @@ export class HomePage implements OnInit, AfterViewInit  {
     }
   }
 
-
-  togglePrices() {
-    this.showPrices = !this.showPrices;
-  }
 }

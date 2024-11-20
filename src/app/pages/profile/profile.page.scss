@@ -1,14 +1,20 @@
-.user-data{
+.data{
     width: 90%;
     margin: 1rem auto;
     padding: 1rem;
     border-left: 1px solid gray;
     border-right: 1px solid gray;
 }
-.a{
-    text-align: center;
-}
 
-ion-footer{
-    background-color: #012942 !important;
+p{
+    font-size: large;
+    font-weight: 500;
+}
+  
+
+ion-icon{
+    display: flex;
+    font-size: 100px;
+    margin: auto;
+    padding: 8px;
 }

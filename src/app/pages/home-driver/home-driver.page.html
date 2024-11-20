@@ -1,58 +1,45 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Añadir Información del Vehículo</ion-title>
-  </ion-toolbar>
-</ion-header>
+  <ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button> 
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content [fullscreen]="true">
-  <p class="bienvenido ion-text-right">Bienvenido {{username}}!</p>
+  <ion-content>
+    <p class="bienvenido ion-text-right">Bienvenido {{username}}!</p>
 
-  <!-- Formulario de Información del Vehículo -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Información del Vehículo</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <form (ngSubmit)="guardarInfoVehiculo()" class="form-container">
-        <ion-item>
-          <ion-label position="floating">Modelo</ion-label>
-          <ion-input type="text" [(ngModel)]="modelo" name="modelo" required></ion-input>
+    <div class="toggle">
+      <ion-toggle labelPlacement="stacked" alignment="start" [(ngModel)]="enServicio" (ionChange)="cambiarEstado($event)">
+        En servicio
+      </ion-toggle>
+    </div>
+    <div class="container">
+      <div class="input-container">
+        <ion-input fill="outline" [(ngModel)]="startLocation"  placeholder="Inicio ruta" (ionInput)="onSearchChange($event, 'start')"></ion-input>
+        <ion-icon name="navigate-sharp" slot="end" class="input-icon"></ion-icon>
+      </div>
+      
+      <ion-list *ngIf="suggestionsStart.length > 0">
+        <ion-item *ngFor="let suggestion of suggestionsStart" (click)="selectSuggestion(suggestion, 'start')">
+          {{ suggestion.display_name }}
         </ion-item>
+      </ion-list>
 
-        <ion-item>
-          <ion-label position="floating">Capacidad</ion-label>
-          <ion-input type="number" [(ngModel)]="capacidad" name="capacidad" required></ion-input>
+      <div class="input-container">
+        <ion-input fill="outline" [(ngModel)]="endLocation" placeholder="Fin ruta" (ionInput)="onSearchChange($event, 'end')"></ion-input>
+      </div>
+      <ion-list *ngIf="suggestionsEnd.length > 0">
+        <ion-item *ngFor="let suggestion of suggestionsEnd" (click)="selectSuggestion(suggestion, 'end')">
+          {{ suggestion.display_name }}
         </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Patente</ion-label>
-          <ion-input type="text" [(ngModel)]="patente" name="patente" required></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Color</ion-label>
-          <ion-input type="text" [(ngModel)]="color" name="color" required></ion-input>
-        </ion-item>
-
-        <ion-button expand="block" type="submit" color="primary">Guardar Información</ion-button>
-      </form>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
-
-<!-- Opcional: Agregar un estilo personalizado -->
-<style>
-  .form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .bienvenido {
-    padding: 10px;
-    font-size: 1.2em;
-  }
-</style>
+      </ion-list>
+      <ion-button class="btn-home custom-button" (click)="calculateRoute()"(ionInput)="onSearchChange($event, 'end')">
+        Ver detalles de ruta
+      </ion-button>
+      <ion-button (click)="recenterMap()">Centrar ubicación</ion-button>
+    </div>
+    
+    <div id="mapId"></div>
+    
+  </ion-content>
