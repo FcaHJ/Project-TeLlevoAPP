@@ -22,10 +22,10 @@
             <p>{{ user.email }} - {{ user.fullname }}</p>
           </ion-label>
           <ion-buttons slot="end">
-            <ion-button color="tertiary" (click)="updateUser(user)">
+            <ion-button color="tertiary" (click)="editUser(user)">
               <ion-icon slot="icon-only" name="create-outline"></ion-icon>
             </ion-button>
-            <ion-button color="danger" (click)="deleteUser(user.id)">
+            <ion-button color="danger" (click)="confirmDeleteUser(user.id)">
               <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -34,13 +34,14 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Formulario para Agregar Nuevo Usuario -->
+  <!-- Formulario para Agregar o Editar Usuario -->
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Agregar Nuevo Usuario</ion-card-title>
+      <ion-card-title>{{ isEditing ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <form (ngSubmit)="createUser()" class="form-container">
+      <form (ngSubmit)="isEditing ? updateUser(newUser) : createUser()" class="form-container">
+
         <ion-item>
           <ion-label position="floating">Username</ion-label>
           <ion-input type="text" [(ngModel)]="newUser.username" name="username" required></ion-input>
@@ -70,8 +71,17 @@
           </ion-select>
         </ion-item>
 
-        <ion-button expand="block" type="submit" color="primary">Agregar Usuario</ion-button>
+        <ion-button expand="block" type="submit" color="primary">
+          {{ isEditing ? 'Actualizar Usuario' : 'Agregar Usuario' }}
+        </ion-button>
       </form>
+
+      <!-- Botón de eliminar (solo cuando se está editando un usuario) -->
+      <ion-button color="danger" *ngIf="isEditing" (click)="confirmDeleteUser(newUser.id)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        Eliminar Usuario
+      </ion-button>
+      
     </ion-card-content>
   </ion-card>
 </ion-content>
