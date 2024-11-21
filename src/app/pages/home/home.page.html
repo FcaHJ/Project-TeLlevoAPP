@@ -36,6 +36,9 @@
     <ion-button class="btn-home custom-button">Programar viaje</ion-button>
     <ion-button (click)="recenterMap()">Centrar en mi ubicación</ion-button>
     <ion-button (click)="clearRoute()">Reiniciar búsqueda</ion-button>
+    <ion-button (click)="showDrivers()">Ver Conductores</ion-button>
+
+
 
     <div *ngIf="routeDetails">
       <p>Distancia: {{ routeDetails.distanceKm }} km</p>

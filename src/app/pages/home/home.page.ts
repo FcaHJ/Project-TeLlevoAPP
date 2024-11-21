@@ -9,6 +9,8 @@ import { lastValueFrom } from 'rxjs';
 import { LocationService } from 'src/app/services/location.service';
 import { Capacitor } from '@capacitor/core';
 import { RateService } from 'src/app/services/rate.service';
+import { UserService } from 'src/app/services/user.service';
+
 
 
 
@@ -24,7 +26,7 @@ export class HomePage implements OnInit, AfterViewInit  {
   username!: string; 
 
   map: any; 
-  
+  drivers: User[] = [];
   startLocation: string = '';
   endLocation: string = '';
   startMarker: any;
@@ -40,12 +42,37 @@ export class HomePage implements OnInit, AfterViewInit  {
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private alertController: AlertController,
     //private storage: Storage, // Añadimos el servicio Storage
     private http: HttpClient,
     private locationService: LocationService,
     private rateService: RateService
     ) { }
+
+    async showDrivers() {
+      const allUsers = this.userService.getUsers();
+      this.drivers = allUsers.filter(user => user.role === 3); 
+  
+      if (this.drivers.length === 0) {
+        this.showAlert('No se encontraron conductores', 'No hay conductores registrados en el sistema.');
+      } else {
+        this.showDriversList();
+      }
+    }
+
+    async showDriversList() {
+      let driversList = this.drivers.map(driver => driver.username).join(', ');
+  
+      const alert = await this.alertController.create({
+        header: 'Conductores',
+        message: `Usuarios con rol de conductor: ${driversList}`,
+        buttons: ['OK']
+      });
+  
+      await alert.present();
+    }
+
 
   userLocationIcon: L.Icon = new L.Icon({
       iconUrl: 'assets/marker.svg', // URL de marcador rojo de Leaflet
@@ -55,22 +82,37 @@ export class HomePage implements OnInit, AfterViewInit  {
       shadowSize: [41, 41],
     });
 
-  async ngOnInit() {
-    this.userRole = this.authService.getCurrentUserRole();
+    async ngOnInit() {
+      this.userRole = this.authService.getCurrentUserRole();
+      
+      // Muestra el nombre de usuario
+      let logged_user = this.authService.getCurrentUser();
+      if (logged_user) {
+        this.username = logged_user.username;
+        console.log("Nombre de usuario:", this.username);
+        await this.getUserLocation();
+      } else {
+        logged_user = null;
+      }
+      this.getUserLocation();
+      this.loadMap();
     
-    // Muestra el nombre de usuario
-    let logged_user = this.authService.getCurrentUser();
-    if (logged_user) {
-      this.username = logged_user.username;
-      console.log("Nombre de usuario:", this.username);
-      await this.getUserLocation();
-    } else {
-      logged_user = null;
+      // Cargar los usuarios correctamente
+      this.userService.loadUsers().subscribe((users) => {
+        console.log('Usuarios cargados:', users);
+        // Ahora puedes usar la lista de usuarios
+        this.filterDrivers(users); // Si deseas filtrar usuarios con rol de conductor
+      });
     }
-    this.getUserLocation();
-    this.loadMap();
-  }
-
+    
+    // Función para filtrar los usuarios con rol de "conductor"
+    filterDrivers(users: User[]) {
+      const drivers = users.filter(user => user.role === 1);  // Asumimos que "1" es el rol de conductor
+      console.log('Usuarios conductores:', drivers);
+      // Aquí puedes hacer algo con los conductores, como mostrarlos en la UI
+    }
+    
+  
 
   ngAfterViewInit() {
     this.loadMap();
@@ -362,5 +404,6 @@ export class HomePage implements OnInit, AfterViewInit  {
       this.suggestionsEnd = [];
     }
   }
+  
 
 }
