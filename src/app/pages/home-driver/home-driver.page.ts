@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { RateService } from 'src/app/services/rate.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class HomeDriverPage implements OnInit {
   constructor(
     private authService: AuthService,
     private alertController: AlertController,
-    //private storage: Storage, // Añadimos el servicio Storage
+    private storageService: StorageService, // Añadimos el servicio Storage
     private http: HttpClient,
     private locationService: LocationService,
     private rateService: RateService
@@ -54,21 +55,30 @@ export class HomeDriverPage implements OnInit {
       shadowSize: [41, 41],
     });
 
-  async ngOnInit() {
-    this.userRole = this.authService.getCurrentUserRole();
+    async ngOnInit() {
+      this.userRole = this.authService.getCurrentUserRole();
+      let logged_user = this.authService.getCurrentUser();
     
-    // Muestra el nombre de usuario
-    let logged_user = this.authService.getCurrentUser();
-    if (logged_user) {
-      this.username = logged_user.username;
-      console.log("Nombre de usuario:", this.username);
-      await this.getUserLocation();
-    } else {
-      logged_user = null;
+      if (logged_user) {
+        this.username = logged_user.username;
+        console.log("Nombre de usuario:", this.username);
+      } else {
+        logged_user = null;
+      }
+    
+      // Recuperar las ubicaciones almacenadas
+      this.startLocation = await this.storageService.get('startLocation') || '';
+      this.endLocation = await this.storageService.get('endLocation') || '';
+    
+      // Si hay ubicaciones almacenadas, dibuja la ruta automáticamente
+      if (this.startLocation && this.endLocation) {
+        this.calculateRoute(); 
+      }
+    
+      this.getUserLocation();
+      this.loadMap();
     }
-    this.getUserLocation();
-    this.loadMap();
-  }
+    
 
   cambiarEstado(event: any) {
     console.log('Estado del toggle:', this.enServicio);
@@ -362,14 +372,17 @@ export class HomeDriverPage implements OnInit {
     }
   }
   
-  selectSuggestion(suggestion: any, type: string) {
+  async selectSuggestion(suggestion: any, type: string) {
     if (type === 'start') {
       this.startLocation = suggestion.display_name;
       this.suggestionsStart = [];
+      await this.storageService.set('startLocation', this.startLocation); // Guardar inicio
     } else {
       this.endLocation = suggestion.display_name;
       this.suggestionsEnd = [];
+      await this.storageService.set('endLocation', this.endLocation); // Guardar destino
     }
   }
+  
 
 }
