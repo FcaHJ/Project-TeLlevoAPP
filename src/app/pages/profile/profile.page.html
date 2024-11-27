@@ -13,7 +13,10 @@
     </ion-card-header>
     <ion-card-content>
         <ion-list lines="none">
-          <ion-icon name="person-sharp"></ion-icon>
+          <div class="profile-container">
+            <ion-icon name="person-sharp" class="profile-icon"></ion-icon>
+            <ion-icon name="camera" class="change-photo-icon"></ion-icon>  <!-- Icono para cambiar foto -->
+          </div>
           <ion-item>
             <p>Nombre Usuario: {{ username }}</p>
           </ion-item>
@@ -25,6 +28,11 @@
           </ion-item>
           <ion-item>
             <p>Contraseña: {{ password }}</p>
+            <ion-buttons slot="end">
+              <ion-button color="grey">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
           </ion-item>
         </ion-list>
     </ion-card-content>

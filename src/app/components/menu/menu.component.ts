@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 interface MenuItem {
@@ -17,7 +18,7 @@ export class MenuComponent  implements OnInit {
 
   @Input() userRole: number | null = null;
   username: string | null = null;
-  menuItems: MenuItem[] = [];
+  private userSubscription: Subscription | null = null;
 
   constructor(
     private authService: AuthService,
@@ -26,16 +27,14 @@ export class MenuComponent  implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.updateUserRole();
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      this.userRole = user?.role || null;
+      this.username = user?.username || null;
+    });
   }
 
-  // Método para obtener el rol actualizado
-  updateUserRole() {
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.userRole = currentUser.role;
-      this.username = currentUser.username;
-    }
+  ngOnDestroy() {
+    this.userSubscription?.unsubscribe();
   }
 
   isAdmin() {
@@ -48,30 +47,6 @@ export class MenuComponent  implements OnInit {
 
   isDriver() {
     return this.userRole === 3; 
-  }
-
-  // Método para mostrar el menú según el rol
-  getMenuItems() {
-    if (this.isAdmin()) {
-      return [
-        { title: 'Usuarios', url: '/users' },
-        { title: 'Perfil', url: '/profile' },
-        //{ title: 'Actividad', url: '/dashabord' },
-      ];
-    } else if (this.isPassenger()) {
-      return [
-        { title: 'Inicio', url: '/home' },
-        { title: 'Perfil', url: '/profile' },
-        // Otros ítems de pasajero
-      ];
-    }else if (this.isDriver()) {
-      return [
-        { title: 'Inicio', url: '/home-driver' },
-        { title: 'Perfil', url: '/profile' },
-        // Otros ítems de conductor
-      ];
-    }
-    return [];
   }
 
   // Función para cerrar sesión

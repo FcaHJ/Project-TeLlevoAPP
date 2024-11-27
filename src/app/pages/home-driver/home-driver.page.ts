@@ -76,7 +76,6 @@ export class HomeDriverPage implements OnInit {
       }
     
       this.getUserLocation();
-      this.loadMap();
     }
     
 

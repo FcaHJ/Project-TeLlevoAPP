@@ -22,7 +22,7 @@ export class LoginPage implements OnInit {
   ) {}
 
   async ngOnInit(){
-    await this.authService.waitForUsers();
+    
   }
 
   // Valida los datos del login
@@ -38,8 +38,10 @@ export class LoginPage implements OnInit {
   private authenticateHandler(user: User | null) {
       if (user) {
         this.successAuthentication();
+        this.clearForm();
       } else {
         this.failedAuthentication();
+        this.clearForm();
       }
     }
   
@@ -56,6 +58,11 @@ export class LoginPage implements OnInit {
           return this.router.navigateByUrl('/loading')
         })
         .then(() => console.log('Navigated to home'));
+    }
+
+    clearForm() {
+      this.username = '';
+      this.password = '';
     }
   
     async generateMessage(message: string, color: string){

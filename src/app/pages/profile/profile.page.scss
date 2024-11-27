@@ -12,9 +12,30 @@ p{
 }
   
 
-ion-icon{
+.profile-container {
+    position: relative;
     display: flex;
-    font-size: 100px;
+    justify-content: center;
+    align-items: center;
     margin: auto;
-    padding: 8px;
-}
+    padding-bottom: 12px;
+  }
+  
+  .profile-icon {
+    font-size: 100px; 
+    color: #666666; 
+    border-radius: 50%;
+    border: 1px solid rgb(139, 139, 139);
+    padding: 12px;
+  }
+  
+  .change-photo-icon {
+    position: absolute;
+    bottom: -2px;
+    transform: translateX(2rem);
+    font-size: 30px;  
+    color: #fff;  
+    background-color: #66be68;  
+    border-radius: 50%;
+    padding: 5px;
+  }

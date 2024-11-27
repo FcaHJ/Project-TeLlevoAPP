@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserService,User } from './user.service';
 import { StorageService } from './storage.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,31 +11,28 @@ export class AuthService {
   currentUser: User | null = null;
   isLogged: boolean = false;
 
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
+
+
   private readonly logged_user_key = 'logged_user';
 
   constructor(private userService: UserService, private storage: StorageService) {
     this.loadCurrentUser(); 
   }
 
-  // Espera a que los usuarios se carguen
-  async waitForUsers() {
-    // Asegúrate de que los usuarios estén cargados en el UserService
-    if (this.userService.getUsers().length === 0) {
-      await this.userService.loadUsers();
-    }
+  // Método para actualizar el usuario actual
+  private setCurrentUser(user: User | null) {
+    this.currentUser = user;
+    this.currentUserSubject.next(user);
   }
 
-  // Autentica al usuario usando `UserService`
   async authenticate(username: string, password: string): Promise<User | null> {
-    await this.waitForUsers();
-    await this.userService.loadUsers().toPromise(); 
-    const user = this.userService.getUserByUsername(username);
-
-    // Verificar si el usuario existe y la contraseña es correcta
+    // Autenticación
+    const user = await this.userService.getUserByUsername(username);
     if (user && user.password === password) {
-      this.currentUser = user;
-      await this.storage.saveCurrentUser(user);  // Guardar usuario en almacenamiento local
-      console.log("ROL ACTUAL DE USUARIO: ", this.currentUser.role);
+      this.setCurrentUser(user);
+      await this.storage.saveCurrentUser(user);
       return user;
     }
     return null;
@@ -43,11 +41,7 @@ export class AuthService {
   // Cargar el usuario desde almacenamiento local 
   async loadCurrentUser(): Promise<void> {
     const user = await this.storage.getCurrentUser();
-    if (user) {
-      this.currentUser = user;
-    } else {
-      console.log('No se encontraron usuarios');
-    }
+    this.setCurrentUser(user || null);
   }
 
   async isAuthenticated() {
@@ -61,7 +55,7 @@ export class AuthService {
       }
   
       // Si no está en memoria, verifica en el almacenamiento
-      const user = await this.storage.get(this.logged_user_key);
+      const user = await this.storage.getCurrentUser();
       
       if (user) {
         console.log('User found in storage, setting currentUser');
@@ -78,15 +72,13 @@ export class AuthService {
     }
   }
 
-  async logout() { 
-    await this.storage.clearCurrentUser();  // Limpiar el usuario en almacenamiento local
-    await this.storage.remove(this.logged_user_key);
-    this.currentUser = null;
-    this.isLogged = false;
+  async logout(): Promise<void> {
+    await this.storage.clearCurrentUser();
+    this.setCurrentUser(null);
   }
 
   //Obtener el usuario actual
-  getCurrentUser(): User | null {
+  getCurrentUser() {
     return this.currentUser;
   }
 

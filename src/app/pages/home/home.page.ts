@@ -4,14 +4,12 @@ import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
-import { AlertController, MenuController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { lastValueFrom } from 'rxjs';
 import { LocationService } from 'src/app/services/location.service';
 import { Capacitor } from '@capacitor/core';
 import { RateService } from 'src/app/services/rate.service';
 import { UserService } from 'src/app/services/user.service';
-
-
 
 
 @Component({
@@ -50,6 +48,32 @@ export class HomePage implements OnInit, AfterViewInit  {
     private rateService: RateService
     ) { }
 
+    async ngOnInit() {
+      this.userRole = this.authService.getCurrentUserRole();
+      
+      // Muestra el nombre de usuario
+      let logged_user = this.authService.getCurrentUser();
+      if (logged_user) {
+        this.username = logged_user.username;
+        console.log("Nombre de usuario:", this.username);
+        await this.getUserLocation();
+      } else {
+        logged_user = null;
+      }
+      this.getUserLocation();
+    
+      // Cargar los usuarios correctamente
+      this.userService.loadUsers().subscribe((users) => {
+        console.log('Usuarios cargados:', users);
+        // Ahora puedes usar la lista de usuarios
+        this.filterDrivers(users); // Si deseas filtrar usuarios con rol de conductor
+      });
+    }
+
+    ngAfterViewInit() {
+      this.loadMap();
+    }
+
     async showDrivers() {
       const allUsers = this.userService.getUsers();
       this.drivers = allUsers.filter(user => user.role === 3); 
@@ -81,54 +105,20 @@ export class HomePage implements OnInit, AfterViewInit  {
       popupAnchor: [1, -34],
       shadowSize: [41, 41],
     });
-
-    async ngOnInit() {
-      this.userRole = this.authService.getCurrentUserRole();
-      
-      // Muestra el nombre de usuario
-      let logged_user = this.authService.getCurrentUser();
-      if (logged_user) {
-        this.username = logged_user.username;
-        console.log("Nombre de usuario:", this.username);
-        await this.getUserLocation();
-      } else {
-        logged_user = null;
-      }
-      this.getUserLocation();
-      this.loadMap();
     
-      // Cargar los usuarios correctamente
-      this.userService.loadUsers().subscribe((users) => {
-        console.log('Usuarios cargados:', users);
-        // Ahora puedes usar la lista de usuarios
-        this.filterDrivers(users); // Si deseas filtrar usuarios con rol de conductor
-      });
-    }
-    
-    // Función para filtrar los usuarios con rol de "conductor"
-    filterDrivers(users: User[]) {
+  // Función para filtrar los usuarios con rol de "conductor"
+  filterDrivers(users: User[]) {
       const drivers = users.filter(user => user.role === 1);  // Asumimos que "1" es el rol de conductor
       console.log('Usuarios conductores:', drivers);
       // Aquí puedes hacer algo con los conductores, como mostrarlos en la UI
-    }
+  }
     
-  
-
-  ngAfterViewInit() {
-    this.loadMap();
-  }
-
-  async checkPermissions() {
-    const permission = await Geolocation.requestPermissions();
-    console.log(permission);
-  }
-
-
+  //Carga el mapa
   async loadMap() {
     try {
       const coordinates = await Geolocation.getCurrentPosition({ 
         enableHighAccuracy: true, 
-        timeout: 5000, 
+        timeout: 10000, 
         maximumAge: 0 
       });
   
@@ -146,6 +136,7 @@ export class HomePage implements OnInit, AfterViewInit  {
         .bindPopup('Estás aquí.')
         .openPopup();
     } catch (error) {
+      console.error('Error al obtener la ubicación:', error);
       this.showAlert('Error', 'No se pudo obtener la ubicación. Por favor, verifica que los permisos estén activados o intenta de nuevo.');
     }
   }
