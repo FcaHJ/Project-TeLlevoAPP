@@ -1,10 +1,21 @@
-.icon-logout{
-    margin-top: 10px;
+ion-icon{
+    font-size: 24px;
+    color:  #00263d;
+    padding-right: 8px;
+}
+.logout-container{
+    position: absolute;
+    bottom: 20px; /* Ajusta la distancia desde abajo */
+    right: 20px;  /* Ajusta la distancia desde la derecha */
     display: flex;
-    margin-left: auto;
-    padding: 10px;
-    border-radius: 1rem;
-    font-size: 20px;
+    justify-content: right;
     align-items: right;
+    width: 100%;
+}
+.icon-logout{
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 28px;
+    color: black;
     background-color: #d8d8d8;
 }

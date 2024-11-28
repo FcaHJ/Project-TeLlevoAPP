@@ -24,6 +24,8 @@ export class UserService  {
     this.loadUsersStorage();
   }
 
+ 
+
   // Cargar usuarios, primero desde el servidor, y si falla, desde el almacenamiento local
   loadUsersStorage(): void {
     // Cargar los usuarios desde el almacenamiento local
@@ -96,5 +98,11 @@ export class UserService  {
       this.users = this.users.filter(user => user.id !== id);
       this.storage.deleteUser(id);  // Eliminar del almacenamiento local
     });
+  }
+
+  // Actualiza el estado del conductor en la base de datos remota
+  updateConductorStatus(id: number, isActive: boolean): Observable<any> {
+    const updateData = { isActive }; // Datos a actualizar, solo el estado
+    return this.http.put(`${this.url}/${id}`, updateData); // Realiza una solicitud PUT a la API
   }
 }

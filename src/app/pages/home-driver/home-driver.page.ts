@@ -9,6 +9,7 @@ import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { RateService } from 'src/app/services/rate.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -16,9 +17,10 @@ import { StorageService } from 'src/app/services/storage.service';
   templateUrl: './home-driver.page.html',
   styleUrls: ['./home-driver.page.scss'],
 })
-export class HomeDriverPage implements OnInit {
+export class HomeDriverPage implements OnInit, AfterViewInit {
 
-  enServicio: boolean = false;
+  isActive: boolean = false;
+  userId: number | null = null; 
 
   userRole: number | null = null;
   username!: string; 
@@ -42,10 +44,11 @@ export class HomeDriverPage implements OnInit {
     private authService: AuthService,
     private alertController: AlertController,
     private storageService: StorageService, // Añadimos el servicio Storage
+    private userService: UserService,
     private http: HttpClient,
     private locationService: LocationService,
     private rateService: RateService
-    ) { }
+    ) { this.storageService.init() }
 
   userLocationIcon: L.Icon = new L.Icon({
       iconUrl: 'assets/marker.svg', // URL de marcador rojo de Leaflet
@@ -62,6 +65,9 @@ export class HomeDriverPage implements OnInit {
       if (logged_user) {
         this.username = logged_user.username;
         console.log("Nombre de usuario:", this.username);
+
+        this.userId = logged_user.id; // Obtener el ID del usuario logeado dinámicamente
+
       } else {
         logged_user = null;
       }
@@ -75,30 +81,42 @@ export class HomeDriverPage implements OnInit {
         this.calculateRoute(); 
       }
     
-      this.getUserLocation();
-    }
-    
 
-  cambiarEstado(event: any) {
-    console.log('Estado del toggle:', this.enServicio);
-    if (this.enServicio) {
-      // Acciones cuando el toggle está activado
-      console.log('El servicio está activo.');
-    } else {
-      // Acciones cuando el toggle está desactivado
-      console.log('El servicio está inactivo.');
+      // Cargar el estado del toggle cuando la página se carga
+      const estadoGuardado = await this.storageService.get('estadoConductor');
+      if (estadoGuardado !== null) {
+        this.isActive = estadoGuardado;
     }
   }
-
+  
   ngAfterViewInit() {
+    this.getUserLocation();
     this.loadMap();
   }
+    
+  async cambiarEstado(event: any) {
+    console.log('Estado del toggle:', this.isActive);
+    if (this.isActive) {
+      console.log('El servicio está activo.');
+    } else {
+      console.log('El servicio está inactivo.');
+    }
 
-  async checkPermissions() {
-    const permission = await Geolocation.requestPermissions();
-    console.log(permission);
+    // Guarda el estado en el almacenamiento
+    await this.storageService.set('estadoConductor', this.isActive);
+
+    // Verifica que userId esté disponible antes de actualizar el estado
+    if (this.userId !== null) {
+      try {
+        await this.userService.updateConductorStatus(this.userId, this.isActive).toPromise();
+        console.log('Estado del conductor actualizado correctamente.');
+      } catch (error) {
+        console.error('Error al actualizar el estado del conductor:', error);
+      }
+    } else {
+      console.error('No se pudo actualizar el estado: ID del usuario no encontrado.');
+    }
   }
-
 
   async loadMap() {
     try {

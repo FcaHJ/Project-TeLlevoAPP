@@ -10,6 +10,8 @@ import { LocationService } from 'src/app/services/location.service';
 import { Capacitor } from '@capacitor/core';
 import { RateService } from 'src/app/services/rate.service';
 import { UserService } from 'src/app/services/user.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,14 +19,14 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit, AfterViewInit  {
+export class HomePage implements OnInit, AfterViewInit {
 
 
   userRole: number | null = null;
   username!: string; 
 
   map: any; 
-  drivers: User[] = [];
+  drivers: any[] = [];
   startLocation: string = '';
   endLocation: string = '';
   startMarker: any;
@@ -42,11 +44,13 @@ export class HomePage implements OnInit, AfterViewInit  {
     private authService: AuthService,
     private userService: UserService,
     private alertController: AlertController,
+    private storage: StorageService,
     //private storage: Storage, // Añadimos el servicio Storage
     private http: HttpClient,
     private locationService: LocationService,
-    private rateService: RateService
-    ) { }
+    private rateService: RateService,
+    private router: Router,
+    ) { this.storage.init(); }
 
     async ngOnInit() {
       this.userRole = this.authService.getCurrentUserRole();
@@ -56,11 +60,9 @@ export class HomePage implements OnInit, AfterViewInit  {
       if (logged_user) {
         this.username = logged_user.username;
         console.log("Nombre de usuario:", this.username);
-        await this.getUserLocation();
       } else {
         logged_user = null;
       }
-      this.getUserLocation();
     
       // Cargar los usuarios correctamente
       this.userService.loadUsers().subscribe((users) => {
@@ -68,35 +70,27 @@ export class HomePage implements OnInit, AfterViewInit  {
         // Ahora puedes usar la lista de usuarios
         this.filterDrivers(users); // Si deseas filtrar usuarios con rol de conductor
       });
+
+      //Estado del conductor
+      const estadoConductor = await this.storage.get('estadoConductor');
+      
     }
 
     ngAfterViewInit() {
+      this.getUserLocation();
       this.loadMap();
     }
 
     async showDrivers() {
-      const allUsers = this.userService.getUsers();
+      const allUsers = await this.userService.getUsers();
       this.drivers = allUsers.filter(user => user.role === 3); 
-  
-      if (this.drivers.length === 0) {
-        this.showAlert('No se encontraron conductores', 'No hay conductores registrados en el sistema.');
-      } else {
-        this.showDriversList();
-      }
-    }
+      
+      // Filtrar conductores activos
+      const activeDrivers = this.drivers.filter(driver => driver.isActive);
 
-    async showDriversList() {
-      let driversList = this.drivers.map(driver => driver.username).join(', ');
-  
-      const alert = await this.alertController.create({
-        header: 'Conductores',
-        message: `Usuarios con rol de conductor: ${driversList}`,
-        buttons: ['OK']
-      });
-  
-      await alert.present();
-    }
+      this.router.navigateByUrl('/drivers');
 
+    }
 
   userLocationIcon: L.Icon = new L.Icon({
       iconUrl: 'assets/marker.svg', // URL de marcador rojo de Leaflet
@@ -108,7 +102,7 @@ export class HomePage implements OnInit, AfterViewInit  {
     
   // Función para filtrar los usuarios con rol de "conductor"
   filterDrivers(users: User[]) {
-      const drivers = users.filter(user => user.role === 1);  // Asumimos que "1" es el rol de conductor
+      const drivers = users.filter(user => user.role === 3);  // rol de conductor
       console.log('Usuarios conductores:', drivers);
       // Aquí puedes hacer algo con los conductores, como mostrarlos en la UI
   }
@@ -178,6 +172,8 @@ export class HomePage implements OnInit, AfterViewInit  {
               this.userLatitude = position.coords.latitude;
               this.userLongitude = position.coords.longitude;
               console.log('Latitud:', this.userLatitude, 'Longitud:', this.userLongitude);
+
+              this.startLocation = `${this.userLatitude.toFixed(6)}, ${this.userLongitude.toFixed(6)}`;
             },
             (error) => {
               this.showAlert('Error', 'No se pudo obtener la ubicación en la web.');

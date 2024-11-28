@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -23,7 +23,8 @@ export class MenuComponent  implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private menuController: MenuController
   ) {}
 
   async ngOnInit() {
@@ -81,6 +82,7 @@ export class MenuComponent  implements OnInit {
       await this.authService.logout();
       this.userRole = null;
       this.username = '';
+      this.menuController.close(); 
       this.router.navigateByUrl('/login');
     } catch (error) {
       console.error('Error en el cierre de sesión:', error);

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <div *ngIf="activeDrivers.length === 0">
+    <p class="noDrivers">No hay conductores activos disponibles en este momento. Por favor, intenta más tarde.</p>
+  </div>
+
+  <div *ngIf="activeDrivers.length > 0">
+    <h4>Conductores disponibles:</h4>
+    <ion-card *ngFor="let driver of activeDrivers">
+      <ion-card-header>
+        <ion-card-title>{{ driver.username }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Email: {{ driver.email }}</p>
+        <p>Estado: {{ driver.isActive ? 'Activo' : 'Inactivo' }}</p>
+        <ion-button (click)="paymentMethod()">Reservar</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  
+</ion-content>
+

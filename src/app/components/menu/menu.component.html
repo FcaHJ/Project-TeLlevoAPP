@@ -6,25 +6,27 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-list *ngIf="userRole === 1">
-      <ion-item routerLink="/users">Usuarios</ion-item>
-      <ion-item routerLink="/profile">Perfil</ion-item>
+    <ion-list *ngIf="userRole === 1" class="menu-list">
+      <ion-item routerLink="/users"><ion-icon name="people"></ion-icon> Usuarios</ion-item>
+      <ion-item routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
     </ion-list>
 
-    <ion-list *ngIf="userRole === 2">
-      <ion-item routerLink="/home">Inicio</ion-item>
-      <ion-item routerLink="/profile">Perfil</ion-item>
+    <ion-list *ngIf="userRole === 2" class="menu-list">
+      <ion-item routerLink="/home"><ion-icon name="home"></ion-icon> Inicio</ion-item>
+      <ion-item routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
     </ion-list>
 
-    <ion-list *ngIf="userRole === 3">
-      <ion-item routerLink="/home-driver">Inicio</ion-item>
-      <ion-item routerLink="/profile">Perfil</ion-item>
+    <ion-list *ngIf="userRole === 3" class="menu-list">
+      <ion-item routerLink="/home-driver"><ion-icon name="home"></ion-icon> Inicio</ion-item>
+      <ion-item routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
     </ion-list>
 
-    <!-- Botón de cierre de sesión -->
-    <button (click)="logout()">
-      <ion-icon name="log-out-outline" class="icon-logout"></ion-icon>
-    </button>
+    <div class="logout-container">
+      <!-- Botón de cierre de sesión -->
+      <button (click)="logout()">
+        <ion-icon name="log-out-outline" class="icon-logout"></ion-icon>
+      </button>
+    </div>
   </ion-content>
 </ion-menu>
 

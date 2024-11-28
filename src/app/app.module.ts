@@ -11,11 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { StorageService } from './services/storage.service';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { provideHttpClient, withInterceptorsFromDi, HttpClientModule } from '@angular/common/http';
-import { HomePageModule } from './pages/home/home.module';
 import { AuthService } from './services/auth.service';
-import { ProfilePageModule } from './pages/profile/profile.module';
-import { UsersPageModule } from './pages/users/users.module';
 import { MenuComponent } from './components/menu/menu.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 export function initApp(storageService: StorageService) {
   return () => storageService.init();
@@ -34,7 +32,7 @@ export function routeReuseStrategy() {
 }
 
 @NgModule({
-  declarations: [AppComponent, ModalComponent, MenuComponent],
+  declarations: [AppComponent, ModalComponent, MenuComponent, PaymentComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
