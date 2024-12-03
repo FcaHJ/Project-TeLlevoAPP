@@ -13,7 +13,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { provideHttpClient, withInterceptorsFromDi, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { MenuComponent } from './components/menu/menu.component';
-import { PaymentComponent } from './components/payment/payment.component';
+import { UserdataComponent } from './components/userdata/userdata.component';
 
 export function initApp(storageService: StorageService) {
   return () => storageService.init();
@@ -32,7 +32,7 @@ export function routeReuseStrategy() {
 }
 
 @NgModule({
-  declarations: [AppComponent, ModalComponent, MenuComponent, PaymentComponent],
+  declarations: [AppComponent, ModalComponent, MenuComponent, UserdataComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 

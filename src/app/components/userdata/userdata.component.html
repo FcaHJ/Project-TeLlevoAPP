@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <!--poner iconos en lugar de texto-->
+      <ion-button color="medium" (click)="cancel()"><ion-icon name="close-circle"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="data">
+    <ion-title class="ion-text-center">Datos</ion-title>
+    
+      <div class="input-container">
+        <ion-input fill="outline" label="Nombre:" value="{{name}}"></ion-input>
+      </div>
+
+      <div class="input-container">
+        <ion-input fill="outline" label="Pasajeros:" placeholder="1"></ion-input>
+      </div>
+
+  </div>
+  <div class="data">
+    <ion-title class="ion-text-center">Metodo de Pago</ion-title>
+  
+    <ion-card class="card-payment" *ngFor="let method of paymentMethods" [class.selected]="method === selectedPaymentMethod" 
+    (click)="selectPaymentMethod(method)">
+      <ion-card-header>
+        <ion-card-title>{{ method.name }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-icon [name]="method.icon" size="large"></ion-icon>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="total">
+    <h6>TOTAL: {{ total }}</h6>
+  </div>
+
+  <div class="btn-payment">
+    <ion-button [disabled]="!selectedPaymentMethod" (click)="confirmReservation()">Confirmar Reserva</ion-button>
+  </div>
+  
+</ion-content>

@@ -24,6 +24,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
 
   userRole: number | null = null;
   username!: string; 
+  selectedHorario!: number;
 
   map: any; 
   
@@ -40,10 +41,24 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
   userLongitude!: number;
   userMarker!: L.Marker;
 
+  horarios = [
+    { id: 1, time: '16:00 PM' },
+    { id: 2, time: '17:00 PM' },
+    { id: 3, time: '18:00 PM' },
+    { id: 4, time: '19:00 PM' },
+    { id: 5, time: '20:00 PM' },
+    { id: 6, time: '21:00 PM' },
+    { id: 7, time: '22:00 PM' },
+    { id: 8, time: '23:00 PM' }
+  ];
+
+  schedule: string = '';
+  destination: string = '';
+
   constructor(
     private authService: AuthService,
     private alertController: AlertController,
-    private storageService: StorageService, // Añadimos el servicio Storage
+    private storageService: StorageService, 
     private userService: UserService,
     private http: HttpClient,
     private locationService: LocationService,
@@ -71,6 +86,15 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
       } else {
         logged_user = null;
       }
+      
+      // Cargar el estado del toggle cuando la página se carga
+      const estadoGuardado = await this.storageService.get('estadoConductor');
+      if (estadoGuardado !== null) {
+        this.isActive = estadoGuardado;
+      }
+
+      // Recuperar el horario guardado desde el almacenamiento
+      this.selectedHorario = await this.storageService.get('selectedHorario') || null;
     
       // Recuperar las ubicaciones almacenadas
       this.startLocation = await this.storageService.get('startLocation') || '';
@@ -78,20 +102,22 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     
       // Si hay ubicaciones almacenadas, dibuja la ruta automáticamente
       if (this.startLocation && this.endLocation) {
-        this.calculateRoute(); 
+        await this.drawSavedRoute(); 
       }
-    
 
-      // Cargar el estado del toggle cuando la página se carga
-      const estadoGuardado = await this.storageService.get('estadoConductor');
-      if (estadoGuardado !== null) {
-        this.isActive = estadoGuardado;
-    }
   }
   
   ngAfterViewInit() {
     this.getUserLocation();
     this.loadMap();
+  }
+
+  // Filtrar horarios según el horario seleccionado
+  async filterByHorario() {
+    console.log('Horario seleccionado:', this.selectedHorario);
+
+    // Guardar el horario seleccionado en el almacenamiento
+    await this.storageService.set('selectedHorario', this.selectedHorario);
   }
     
   async cambiarEstado(event: any) {
@@ -175,12 +201,14 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
         this.userLongitude = coordinates.coords.longitude;
       } else {
         // Si es la web, usa la API estándar de geolocalización
-        if (navigator.geolocation) {
+        if (navigator.geolocation) { 
           navigator.geolocation.getCurrentPosition(
             (position) => {
               this.userLatitude = position.coords.latitude;
               this.userLongitude = position.coords.longitude;
               console.log('Latitud:', this.userLatitude, 'Longitud:', this.userLongitude);
+
+              this.startLocation = `${this.userLatitude.toFixed(6)}, ${this.userLongitude.toFixed(6)}`;
             },
             (error) => {
               this.showAlert('Error', 'No se pudo obtener la ubicación en la web.');
@@ -321,6 +349,50 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     } catch (error) {
       console.error('Error al trazar la ruta:', error);
       this.showAlert('Error', 'No se pudo trazar la ruta entre los puntos.');
+    }
+  }
+
+  async saveRoute() {
+    if (this.userId !== null) {
+      try {
+        // Obtener la ubicación actual del usuario
+        const coordinates = await Geolocation.getCurrentPosition();
+        const { latitude, longitude } = coordinates.coords;
+  
+        // Guardar la ubicación en el servicio de almacenamiento o en la base de datos
+        // Aquí se puede guardar en localStorage, en un servicio o hacer una llamada a la API
+        await this.storageService.set(`user_${this.userId}`, { latitude, longitude });
+  
+        // O, si estás usando un servicio como UserService para guardar en la base de datos:
+        await this.userService.saveUserLocation(this.userId, latitude, longitude).toPromise();
+  
+        // Mostrar un mensaje de éxito
+        this.showAlert('Éxito', 'La ubicación ha sido guardada correctamente.');
+  
+      } catch (error) {
+        console.error('Error al guardar la ubicación:', error);
+        this.showAlert('Error', 'No se pudo guardar la ubicación.');
+      }
+    } else {
+      console.error('No se encontró el ID del usuario');
+      this.showAlert('Error', 'No se encontró el ID del usuario.');
+    }
+  }
+
+  async drawSavedRoute() {
+    // Recuperar las coordenadas guardadas
+    const startCoordinates = await this.storageService.get('startCoordinates');
+    const endCoordinates = await this.storageService.get('endCoordinates');
+  
+    if (startCoordinates && endCoordinates) {
+      const startLatLng: [number, number] = [startCoordinates.lat, startCoordinates.lng];
+      const endLatLng: [number, number] = [endCoordinates.lat, endCoordinates.lng];
+  
+      // Cargar el mapa
+      this.loadMap();
+  
+      // Llamar a calculateRoute para dibujar la ruta en el mapa
+      await this.calculateRoute();
     }
   }
 

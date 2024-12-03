@@ -105,4 +105,9 @@ export class UserService  {
     const updateData = { isActive }; // Datos a actualizar, solo el estado
     return this.http.put(`${this.url}/${id}`, updateData); // Realiza una solicitud PUT a la API
   }
+
+  //Guarda la ubicacion del usuario
+  saveUserLocation(id: number, latitude: number, longitude: number) {
+    return this.http.post<any>(`${this.url}/${id}`, { id, latitude, longitude });
+  }
 }

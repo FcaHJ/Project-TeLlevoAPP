@@ -34,8 +34,16 @@
           {{ suggestion.display_name }}
         </ion-item>
       </ion-list>
+
+      <ion-select label="Horario salida: "  placeholder="Filtrar" [(ngModel)]="schedule" (ionChange)="filterByHorario()" >
+        <ion-select-option *ngFor="let horario of horarios" [value]="horario.id">{{ horario.time }}</ion-select-option>
+      </ion-select>
+      
       <ion-button class="btn-home custom-button" (click)="calculateRoute()"(ionInput)="onSearchChange($event, 'end')">
-        Ver detalles de ruta
+        Ver ruta
+      </ion-button>
+      <ion-button class="btn-home custom-button"(click)="saveRoute()">
+        Guardar ruta
       </ion-button>
       <ion-button class="btn-home" (click)="recenterMap()"><ion-icon name="locate"></ion-icon></ion-button>
     </div>

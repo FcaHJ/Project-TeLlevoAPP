@@ -20,7 +20,7 @@ app.listen(PORT, () => {
 let users = [
   { id: 1, username: 'Admin', fullname: 'Administrador', password: 'admin123',  email:'admin@duoc.cl', role: 1 },
   { id: 2, username: 'Pasajero', fullname: 'Pasajero Prueba', password: 'pasajero123',  email:'pasajero@duoc.cl', role: 2 },
-  { id: 3, username: 'Conductor', fullname: 'Conductor Prueba', password: 'conductor123',  email:'conductor@duoc.cl', role: 3, isActive: false },
+  { id: 3, username: 'Conductor', fullname: 'Conductor Uno', password: 'conductor123',  email:'conductor@duoc.cl', role: 3, isActive: false },
 ];
 
 // Obtener todos los usuarios
@@ -29,7 +29,7 @@ app.get('/api/users', (req, res) => {
 });
 
 // Crear un nuevo usuario
-app.post('/api/users', (req, res) => {
+app.post('/api/users/:id', (req, res) => {
   const newUser = { id: Date.now(), ...req.body };
   users.push(newUser);
   res.status(201).json(newUser);

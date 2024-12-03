@@ -75,6 +75,7 @@ export class AuthService {
   async logout(): Promise<void> {
     await this.storage.clearCurrentUser();
     this.setCurrentUser(null);
+    await this.loadCurrentUser();
   }
 
   //Obtener el usuario actual

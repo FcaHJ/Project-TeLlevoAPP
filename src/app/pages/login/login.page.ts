@@ -52,7 +52,7 @@ export class LoginPage implements OnInit {
   
     private successAuthentication() {
       
-      this.generateMessage('Success login', 'success')
+      this.generateMessage('Sesión exitosa', 'success')
         .then(() => {
           console.log('Success login');
           return this.router.navigateByUrl('/loading')
