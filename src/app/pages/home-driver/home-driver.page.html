@@ -3,6 +3,9 @@
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button> 
       </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-icon name="notifications" class="icon-notification"  (click)="openNotifications()"></ion-icon>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
@@ -16,18 +19,14 @@
     </div>
     <div class="container">
       <div class="input-container">
-        <ion-input fill="outline" [(ngModel)]="startLocation"  placeholder="Inicio ruta" (ionInput)="onSearchChange($event, 'start')"></ion-input>
-        <ion-icon name="navigate-sharp" slot="end" class="input-icon"></ion-icon>
+        <ion-select class="custom-select" labelPlacement="stacked" label="Desde:" placeholder="Selecciona Sede" fill="outline" interface="popover" [(ngModel)]="selectedSede" (ionChange)="saveSelectedSede()">
+          <ion-icon slot="start" name="navigate-sharp" aria-hidden="true"></ion-icon>
+          <ion-select-option *ngFor="let sede of sedes" [value]="sede.id">{{ sede.name }}</ion-select-option>
+        </ion-select>
       </div>
-      
-      <ion-list *ngIf="suggestionsStart.length > 0">
-        <ion-item *ngFor="let suggestion of suggestionsStart" (click)="selectSuggestion(suggestion, 'start')">
-          {{ suggestion.display_name }}
-        </ion-item>
-      </ion-list>
 
       <div class="input-container">
-        <ion-input fill="outline" [(ngModel)]="endLocation" placeholder="Fin ruta" (ionInput)="onSearchChange($event, 'end')"></ion-input>
+        <ion-input fill="outline" labelPlacement="stacked" label="Hacia:" [(ngModel)]="endLocation" placeholder="Fin ruta" (ionInput)="onSearchChange($event, 'end')"></ion-input>
       </div>
       <ion-list *ngIf="suggestionsEnd.length > 0">
         <ion-item *ngFor="let suggestion of suggestionsEnd" (click)="selectSuggestion(suggestion, 'end')">
@@ -35,7 +34,7 @@
         </ion-item>
       </ion-list>
 
-      <ion-select label="Horario salida: "  placeholder="Filtrar" [(ngModel)]="schedule" (ionChange)="filterByHorario()" >
+      <ion-select label="Horario salida: "  placeholder="Filtrar"  [(ngModel)]="selectedHorario" (ionChange)="saveSelectedHorario()" >
         <ion-select-option *ngFor="let horario of horarios" [value]="horario.id">{{ horario.time }}</ion-select-option>
       </ion-select>
       

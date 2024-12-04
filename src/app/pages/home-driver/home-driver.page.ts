@@ -10,6 +10,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { RateService } from 'src/app/services/rate.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
   userRole: number | null = null;
   username!: string; 
   selectedHorario!: number;
+  selectedSede!: number;
 
   map: any; 
   
@@ -52,6 +54,29 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     { id: 8, time: '23:00 PM' }
   ];
 
+  sedes = [
+    { id: 1, name: 'Alameda' },
+    { id: 2, name: 'Padre Alonso de Ovalle' },
+    { id: 3, name: 'Antonio Varas' },
+    { id: 4, name: 'Educación Continua' },
+    { id: 5, name: 'Maipú' },
+    { id: 6, name: 'Melipilla' },
+    { id: 7, name: 'Plaza Norte' },
+    { id: 8, name: 'Plaza Oeste' },
+    { id: 9, name: 'Plaza Vespucio' },
+    { id: 10, name: 'Puente Alto' },
+    { id: 11, name: 'San Bernardo' },
+    { id: 12, name: 'San Carlos de Apoquindo' },
+    { id: 13, name: 'San Joaquín' },
+    { id: 14, name: 'Valparaíso' },
+    { id: 15, name: 'Viña del Mar' },
+    { id: 16, name: 'Campus Arauco' },
+    { id: 17, name: 'Campus Nacimiento' },
+    { id: 18, name: 'San Andrés de Concepción' },
+    { id: 19, name: 'Campus Villarrica' },
+    { id: 20, name: 'Puerto Montt' }
+  ];
+
   schedule: string = '';
   destination: string = '';
 
@@ -62,7 +87,8 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     private userService: UserService,
     private http: HttpClient,
     private locationService: LocationService,
-    private rateService: RateService
+    private rateService: RateService,
+    private router: Router
     ) { this.storageService.init() }
 
   userLocationIcon: L.Icon = new L.Icon({
@@ -72,6 +98,13 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
       popupAnchor: [1, -34],
       shadowSize: [41, 41],
     });
+
+    guardarYRedirigir() {
+      // Redirige al componente pasajero con los parámetros de sede y horario
+      this.router.navigate(['/home'], {
+        queryParams: { sede: this.selectedSede, horario: this.selectedHorario }
+      });
+    }
 
     async ngOnInit() {
       this.userRole = this.authService.getCurrentUserRole();
@@ -95,6 +128,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
 
       // Recuperar el horario guardado desde el almacenamiento
       this.selectedHorario = await this.storageService.get('selectedHorario') || null;
+      this.selectedSede = await this.storageService.get('selectedSede') || null;
     
       // Recuperar las ubicaciones almacenadas
       this.startLocation = await this.storageService.get('startLocation') || '';
@@ -112,12 +146,34 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     this.loadMap();
   }
 
-  // Filtrar horarios según el horario seleccionado
-  async filterByHorario() {
-    console.log('Horario seleccionado:', this.selectedHorario);
+  notifications = [
+    { message: 'Nuevo mensaje recibido.' }
+  ];
+  // Función para abrir las notificaciones
+  async openNotifications() {
+  const alert = await this.alertController.create({
+    header: 'Notificaciones',
+    message: this.notifications.map(notification => notification.message).join('\n'),
+    buttons: ['Cerrar']
+  });
 
-    // Guardar el horario seleccionado en el almacenamiento
-    await this.storageService.set('selectedHorario', this.selectedHorario);
+  await alert.present();
+}
+
+  // Guardar la sede seleccionada
+  async saveSelectedSede() {
+    if (this.selectedSede) {
+      await this.storageService.set('selectedSede', this.selectedSede);
+      console.log('Sede guardada:', this.selectedSede);
+    }
+  }
+
+  // Guardar el horario seleccionado
+  async saveSelectedHorario() {
+    if (this.selectedHorario) {
+      await this.storageService.set('selectedHorario', this.selectedHorario);
+      console.log('Horario guardado:', this.selectedHorario);
+    }
   }
     
   async cambiarEstado(event: any) {

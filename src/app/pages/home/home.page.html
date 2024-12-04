@@ -3,6 +3,9 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button> 
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-icon name="notifications" class="icon-notification"  (click)="openNotifications()"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -53,7 +56,8 @@
         </ion-card-header>
         <ion-card-content>
           <p>Email: {{ driver.email }}</p>
-          <p>Destino: {{ driver.destino }}</p> 
+          <p>Sede: {{ driver.sede }}</p> 
+          <p>Destino: </p> 
           <p>Horario: {{ driver.horario }}</p> 
           <p>Estado: {{ driver.isActive ? 'Activo' : 'Inactivo' }}</p>
           <div class="btn-card">

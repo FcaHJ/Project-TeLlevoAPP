@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { User } from 'src/app/services/user.service';
+import { Location } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
@@ -63,8 +64,10 @@ export class HomePage implements OnInit, AfterViewInit {
   activeDrivers: any[] = []; // Conductores activos 
   filteredDrivers: any[] = [];  
   showDriverList: boolean = false;
+  sede: any = null;
   selectedSede: any = null;
   selectedHorario: any = null;
+  horario: any = null;
   noFilteredDrivers: boolean = false;
 
   startLocation: string = '';
@@ -87,7 +90,8 @@ export class HomePage implements OnInit, AfterViewInit {
     private locationService: LocationService,
     private rateService: RateService,
     private router: Router,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private location: Location
     ) { this.storage.init(); }
 
     async ngOnInit() {
@@ -100,6 +104,13 @@ export class HomePage implements OnInit, AfterViewInit {
         console.log("Nombre de usuario:", this.username);
       } else {
         logged_user = null;
+      }
+
+      // Recuperar los datos del state de la navegación
+      const navigation = this.location.getState() as { sede: string, horario: string };
+      if (navigation) {
+        this.sede = navigation.sede || 'No seleccionada';
+        this.horario = navigation.horario || 'No seleccionado';
       }
     
       // Cargar los usuarios correctamente
@@ -118,6 +129,20 @@ export class HomePage implements OnInit, AfterViewInit {
       this.getUserLocation();
       //this.loadMap();
     }
+
+    notifications = [
+      { message: 'Nuevo mensaje recibido.' }
+    ];
+    // Función para abrir las notificaciones
+    async openNotifications() {
+    const alert = await this.alertController.create({
+      header: 'Notificaciones',
+      message: this.notifications.map(notification => notification.message).join('\n'),
+      buttons: ['Cerrar']
+    });
+
+    await alert.present();
+  }
 
     async userData() {
       this.openModal();
@@ -148,16 +173,22 @@ export class HomePage implements OnInit, AfterViewInit {
     filterDriversBasedOnCriteria() {
       let driversToShow = this.activeDrivers;
 
-      if (this.selectedSede) {
-        driversToShow = driversToShow.filter(driver => driver.sede === this.selectedSede);
-      }
+      // Si ambos filtros están seleccionados, aplica un OR lógico
+      driversToShow = driversToShow.filter(driver => {
+        const sedeMatches = this.selectedSede 
+          ? driver.sede === this.sedes.find(s => s.id === this.selectedSede)?.name
+          : true; // Si no hay sede seleccionada, acepta todos los conductores.
 
-      if (this.selectedHorario) {
-        driversToShow = driversToShow.filter(driver => driver.horario === this.selectedHorario);
-      }
+        const horarioMatches = this.selectedHorario 
+          ? driver.horario === this.horarios.find(h => h.id === this.selectedHorario)?.time
+          : true; // Si no hay horario seleccionado, acepta todos los conductores.
+
+        // Retorna true si al menos uno de los filtros coincide
+        return sedeMatches || horarioMatches;
+      });
 
       if (this.searchTerm && this.searchTerm.trim() !== '') {
-        driversToShow = driversToShow.filter(driver => driver.destino.toLowerCase().includes(this.searchTerm.toLowerCase()));
+        driversToShow = driversToShow.filter(driver => driver.sede.toLowerCase().includes(this.searchTerm.toLowerCase()));
       }
 
       return driversToShow;
@@ -178,8 +209,14 @@ export class HomePage implements OnInit, AfterViewInit {
 
     // Función para filtrar los usuarios con rol de "conductor"
     filterDrivers(users: User[]) {
-      this.drivers = users.filter(user => user.role === 3); // Rol de conductor
+      this.drivers = users.filter(user => user.role === 3); // Rol de conductor 
       console.log('Usuarios conductores:', this.drivers);
+
+      // Asignar datos simulados de sede y horario
+      this.drivers.forEach((driver, index) => {
+        driver.sede = this.sedes[index % this.sedes.length].name; // Asignar sede de forma cíclica
+        driver.horario = this.horarios[index % this.horarios.length].time; // Asignar horario de forma cíclica
+      });
 
       this.showDriversList();
   }
