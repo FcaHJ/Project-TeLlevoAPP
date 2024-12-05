@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button> 
+      <ion-menu-button color="secondary"></ion-menu-button> 
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-icon name="notifications" class="icon-notification"  (click)="openNotifications()"></ion-icon>
@@ -17,7 +17,7 @@
       <h5 class="viaja-comodo">Viaja cómodo, llega seguro.</h5>
 
     <div class="search-bar-container">
-      <ion-searchbar animated="true" placeholder="Buscar Destino" (ionInput)="onSearchChange($event, 'start')"></ion-searchbar>
+      <ion-searchbar color="secondary" animated="true" placeholder="Buscar Destino" (ionInput)="onSearchChange($event, 'start')"></ion-searchbar>
       
       <div class="input-container">
         <ion-list *ngIf="suggestionsStart.length > 0">

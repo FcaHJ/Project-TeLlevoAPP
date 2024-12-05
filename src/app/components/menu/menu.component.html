@@ -1,24 +1,24 @@
 
-<ion-menu side="start" content-id="main-content">
+<ion-menu side="start" class="menu" content-id="main-content">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title>Menú</ion-title>
+      <ion-title color="secondary">Menú</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list *ngIf="userRole === 1" class="menu-list">
-      <ion-item routerLink="/users"><ion-icon name="people"></ion-icon> Usuarios</ion-item>
-      <ion-item routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
+      <ion-item color="secondary" routerLink="/users"><ion-icon name="people"></ion-icon> Usuarios</ion-item>
+      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
     </ion-list>
 
     <ion-list *ngIf="userRole === 2" class="menu-list">
-      <ion-item routerLink="/home"><ion-icon name="home"></ion-icon> Inicio</ion-item>
-      <ion-item routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
+      <ion-item color="secondary" routerLink="/home"><ion-icon name="home"></ion-icon> Inicio</ion-item>
+      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
     </ion-list>
 
     <ion-list *ngIf="userRole === 3" class="menu-list">
-      <ion-item routerLink="/home-driver"><ion-icon name="home"></ion-icon> Inicio</ion-item>
-      <ion-item routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
+      <ion-item color="secondary" routerLink="/home-driver"><ion-icon name="home"></ion-icon> Inicio</ion-item>
+      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
     </ion-list>
 
     <div class="logout-container">

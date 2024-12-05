@@ -1,11 +1,18 @@
+ion-content{
+  --background: none !important;
+    background: #e9e9e9 !important;
+}
 .data{
+  background: #e9e9e9 !important;
     width: 90%;
     margin: 1rem auto;
     padding: 1rem;
     border-left: 1px solid gray;
     border-right: 1px solid gray;
 }
-
+ion-list {
+  background: #e9e9e9 !important;
+}
 p{
     font-size: large;
     font-weight: 500;
@@ -19,6 +26,7 @@ p{
     align-items: center;
     margin: auto;
     padding-bottom: 12px;
+    background: #e9e9e9 !important;
   }
   
   .profile-icon {
@@ -39,3 +47,9 @@ p{
     border-radius: 50%;
     padding: 5px;
   }
+ion-card-title{
+  color: black;
+}
+.btn-profile{
+  color: white;
+}

@@ -1,7 +1,7 @@
 <ion-header [translucent]="true" class="ion-text-center ion-no-border">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button defaultHref="/" class="custom-btn"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -11,7 +11,7 @@
   <div id="container">
     <h3>Recuperar Contraseña</h3>
     <ion-list>
-      <ion-item>
+      <ion-item color="secondary">
         <ion-input [(ngModel)]="username" label="Nombre de usuario" typo="text" labelPlacement="stacked"></ion-input>
       </ion-item>
     </ion-list>

@@ -78,6 +78,7 @@ export class UsersPage implements OnInit {
           handler: () => this.deleteUser(id),
         },
       ],
+      cssClass: 'custom-alert', // Estilo personalizado para la alerta
     });
 
     await alert.present();

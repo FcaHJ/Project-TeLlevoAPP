@@ -5,16 +5,16 @@
       <ion-button color="medium" (click)="cancel()">Cancelar</ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="confirm()" [strong]="true">Confirmar</ion-button>
+      <ion-button (click)="confirm()" [strong]="true" color="secondary">Confirmar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-  <ion-title class="ion-text-center">Cambiar Contraseña</ion-title>
-  <ion-item>
+  <ion-title class="center">Cambiar Contraseña</ion-title>
+  <ion-item color="secondary">
     <ion-input labelPlacement="stacked" label="Contraseña" [(ngModel)]="password"></ion-input>
   </ion-item>
-  <ion-item>
+  <ion-item color="secondary">
     <ion-input labelPlacement="stacked" label="Confirmar Contraseña" [(ngModel)]="password2"></ion-input>
   </ion-item>
 </ion-content>

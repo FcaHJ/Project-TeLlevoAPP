@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button color="secondary"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -16,7 +16,7 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let user of users" lines="full">
+        <ion-item *ngFor="let user of users" lines="full" color="secondary">
           <ion-label>
             <h2>{{ user.username }}</h2>
             <p>{{ user.email }} - {{ user.fullname }}</p>
@@ -42,27 +42,27 @@
     <ion-card-content>
       <form (ngSubmit)="isEditing ? updateUser(newUser) : createUser()" class="form-container">
 
-        <ion-item>
+        <ion-item color="secondary">
           <ion-label position="floating">Username</ion-label>
           <ion-input type="text" [(ngModel)]="newUser.username" name="username" required></ion-input>
         </ion-item>
 
-        <ion-item>
+        <ion-item color="secondary">
           <ion-label position="floating">Email</ion-label>
           <ion-input type="email" [(ngModel)]="newUser.email" name="email" required></ion-input>
         </ion-item>
 
-        <ion-item>
+        <ion-item color="secondary">
           <ion-label position="floating">Password</ion-label>
           <ion-input type="password" [(ngModel)]="newUser.password" name="password" required></ion-input>
         </ion-item>
 
-        <ion-item>
+        <ion-item color="secondary">
           <ion-label position="floating">Full Name</ion-label>
           <ion-input type="text" [(ngModel)]="newUser.fullname" name="fullname" required></ion-input>
         </ion-item>
 
-        <ion-item>
+        <ion-item color="secondary">
           <ion-label>Selecciona Rol</ion-label>
           <ion-select [(ngModel)]="newUser.role" name="role" placeholder="Role" required>
             <ion-select-option value="1">Admin</ion-select-option>
@@ -71,7 +71,7 @@
           </ion-select>
         </ion-item>
 
-        <ion-button expand="block" type="submit" color="primary">
+        <ion-button expand="block" type="submit" class="btn-user">
           {{ isEditing ? 'Actualizar Usuario' : 'Agregar Usuario' }}
         </ion-button>
       </form>

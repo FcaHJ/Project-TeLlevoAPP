@@ -50,8 +50,21 @@
     --ion-color-primary-dark: #00263d;
     --ion-color-secondary: #e9e9e9;
 
+    /* Cambiar el color de fondo de todas las alertas */
+  ion-alert {
+    --color: #ffffff00; /* Color del texto */
+    --border-radius: 10px; /* Bordes redondeados */
   }
   
+  /* Cambiar el color de los botones de todas las alertas */
+  ion-button {
+    --color: #e9e9e9; /* Color del texto del botón */
+  }
+  ion-select-button {
+    --color: #ffffff00;
+  } 
+
+  }
 // Geolocalización
 
 @import url('https://unpkg.com/leaflet/dist/leaflet.css');
