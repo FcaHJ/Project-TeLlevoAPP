@@ -15,6 +15,13 @@ ion-content{
   font-weight: 500;
   color: #000000; 
 }
+.img-duoc{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 95%;
+}
 .viaja-comodo{
   font-size: x-large;
   color: #000000; 
@@ -60,8 +67,11 @@ ion-item {
   color: #050505; // Cambia el color del texto 
   --background: transparent; // Para asegurar que el fondo no sea blanco 
 }
+ion-searchbar{
+  color: #000 !important;
+}
 ion-select{
-  color: #000000;
+  color: #000 !important;
 }
 /**Custom Card-Driver**/
 h4{

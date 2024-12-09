@@ -26,7 +26,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
   userRole: number | null = null;
   username!: string; 
   selectedHorario!: number;
-  selectedSede!: number;
+  selectedSede:  { id: number; name: string; address: string } | null = null ;
 
   map: any; 
   
@@ -55,26 +55,26 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
   ];
 
   sedes = [
-    { id: 1, name: 'Alameda' },
-    { id: 2, name: 'Padre Alonso de Ovalle' },
-    { id: 3, name: 'Antonio Varas' },
-    { id: 4, name: 'Educación Continua' },
-    { id: 5, name: 'Maipú' },
-    { id: 6, name: 'Melipilla' },
-    { id: 7, name: 'Plaza Norte' },
-    { id: 8, name: 'Plaza Oeste' },
-    { id: 9, name: 'Plaza Vespucio' },
-    { id: 10, name: 'Puente Alto' },
-    { id: 11, name: 'San Bernardo' },
-    { id: 12, name: 'San Carlos de Apoquindo' },
-    { id: 13, name: 'San Joaquín' },
-    { id: 14, name: 'Valparaíso' },
-    { id: 15, name: 'Viña del Mar' },
-    { id: 16, name: 'Campus Arauco' },
-    { id: 17, name: 'Campus Nacimiento' },
-    { id: 18, name: 'San Andrés de Concepción' },
-    { id: 19, name: 'Campus Villarrica' },
-    { id: 20, name: 'Puerto Montt' }
+    { id: 1, name: 'Sede Alameda', address: 'DuocUC SeDe Metropolitana, 8, Avenida España, Barrio República, Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8350708, Chile' },
+    { id: 2, name: 'Sede Padre Alonso de Ovalle', address: 'Instituto Profesional Duoc UC Sede Padre Alonso de Ovalle, 1586, Alonso de Ovalle, Barrio Dieciocho, Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8330180, Chile'},
+    { id: 3, name: 'Sede Antonio Varas', address: 'Duoc, 666, Avenida Antonio Varas, Barrio Inés de Suárez, Providencia, Provincia de Santiago, Región Metropolitana de Santiago, 7500000, Chile'},
+    { id: 4, name: 'Sede Educación Continua', address: 'Instituto Profesional Duoc UC Sede Educación Continua, 337, Avenida José Miguel Claro, Barrio Triana, Providencia, Provincia de Santiago, Región Metropolitana de Santiago, 7500000, Chile' },
+    { id: 5, name: 'Sede Maipú', address: 'Duoc UC, Primera Transversal, Los Renovales, Maipú, Provincia de Santiago, Región Metropolitana de Santiago, 9251819, Chile' },
+    { id: 6, name: 'Sede Melipilla', address: 'Duoc UC Sede Melipilla, Los Carreras, Las Margaritas, Melipilla, Provincia de Melipilla, Región Metropolitana de Santiago, 9580000, Chile' },
+    { id: 7, name: 'Sede Plaza Norte', address: 'DuocUC Sede Plaza Norte, 1660, Santa Elena de Huechuraba, Barrio Industrial El Parronal, Huechuraba, Provincia de Santiago, Región Metropolitana de Santiago, 8600578, Chile' },
+    { id: 8, name: 'Sede Plaza Oeste', address: 'Duoc UC Sede Plaza Oeste, 1501, Avenida Américo Vespucio, Villa Santa Adela, Cerrillos, Provincia de Santiago, Región Metropolitana de Santiago, 9222145, Chile' },
+    { id: 9, name: 'Sede Plaza Vespucio', address: 'Duoc UC Plaza Vespucio, 7107, Froilán Roa, Villa Perú, La Florida, Provincia de Santiago, Región Metropolitana de Santiago, 8260183, Chile'},
+    { id: 10, name: 'Sede Puente Alto', address: 'DUOC UC Puente Alto, 1340, Avenida Concha y Toro, Condominio Los Otoñales 1, Puente Alto, Provincia de Cordillera, Región Metropolitana de Santiago, 8151746, Chile'},
+    { id: 11, name: 'Sede San Bernardo', address: 'Duoc UC (Sede San Bernardo), 857, Ramón Freire, Barrio Esmeralda, San Bernardo, Provincia de Maipo, Región Metropolitana de Santiago, 8059001, Chile'},
+    { id: 12, name: 'Sede San Carlos de Apoquindo', address: 'DuocUC SeDe San Carlos de Apoquindo, 12881, Camino El Alba, Condominio Los Algarrobos, Las Condes, Provincia de Santiago, Región Metropolitana de Santiago, 7610685, Chile'},
+    { id: 13, name: 'Sede San Joaquín', address: 'DUOC UC San Joaquín, 4917, Avenida Vicuña Mackenna, Villa Eleodoro Gormaz, San Joaquín, Provincia de Santiago, Región Metropolitana de Santiago, 8940000, Chile' },
+    { id: 14, name: 'Sede Valparaíso', address: 'DUOC UC Sede Valparaíso, Blanco, Cerro Concepción, Almendral, Valparaíso, Provincia de Valparaíso, Región de Valparaíso, 2362829, Chile' },
+    { id: 15, name: 'Sede Viña del Mar', address: 'Duoc UC - Sede Viña del Mar, 2336, Álvarez, Lusitania, Forestal, Viña del Mar, Provincia de Valparaíso, Región de Valparaíso, 2520000, Chile' },
+    { id: 16, name: 'Campus Arauco', address: 'Duoc UC, 1060, Ruta P-20, Arauco, Provincia de Arauco, Región del Biobío, Chile' },
+    { id: 17, name: 'Campus Nacimiento', address: 'Duoc UC - CMPC, Avenida Julio Hemmelmann, Población Lautaro, Nacimiento, Provincia de Bío-Bío, Región del Biobío, 4550000, Chile' },
+    { id: 18, name: 'Sede San Andrés de Concepción', address: 'Duoc UC, Autopista Concepción - Talcahuano, Lomas Verdes, Concepción, Provincia de Concepción, Región del Biobío, 4061735, Chile'},
+    { id: 19, name: 'Campus Villarrica', address: 'Duoc UC Campus Villarrica, 51, Anfión Muñoz, Puelche, Villarrica, Provincia de Cautín, Región de la Araucanía, 4930611, Chile'},
+    { id: 20, name: 'Sede Puerto Montt', address: 'DuocUC Sede Puerto Montt, 651, Egaña, Población Miramar, Puerto Montt, Provincia de Llanquihue, Región de Los Lagos, 5507138, Chile'}
   ];
 
   schedule: string = '';
@@ -128,10 +128,23 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
 
       // Recuperar el horario guardado desde el almacenamiento
       this.selectedHorario = await this.storageService.get('selectedHorario') || null;
-      this.selectedSede = await this.storageService.get('selectedSede') || null;
+
+      // Recuperar la sede seleccionada desde el almacenamiento
+        const savedSede = await this.storageService.get('selectedSede');
+        if (savedSede) {
+          const sede = this.sedes.find(s => s.id === savedSede.id);
+          if (sede) {
+            this.selectedSede = sede; // Asegúrate de asignar `selectedSede` también
+            this.startLocation = sede.address; // Usa la dirección de la sede
+          } else {
+            console.warn('La sede guardada no coincide con ninguna sede conocida.');
+          }
+        } else {
+          console.warn('No se encontró ninguna sede guardada en el almacenamiento.');
+          this.startLocation = ''; // Valor predeterminado
+        }
     
       // Recuperar las ubicaciones almacenadas
-      this.startLocation = await this.storageService.get('startLocation') || '';
       this.endLocation = await this.storageService.get('endLocation') || '';
     
       // Si hay ubicaciones almacenadas, dibuja la ruta automáticamente
@@ -141,8 +154,8 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
 
   }
   
-  ngAfterViewInit() {
-    this.getUserLocation();
+  async ngAfterViewInit() {
+    await this.getUserLocation();
     this.loadMap();
   }
 
@@ -164,7 +177,9 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
   async saveSelectedSede() {
     if (this.selectedSede) {
       await this.storageService.set('selectedSede', this.selectedSede);
+      this.startLocation = this.selectedSede.address
       console.log('Sede guardada:', this.selectedSede);
+      console.log('Ubicación de inicio asignada:', this.startLocation);
     }
   }
 
@@ -293,10 +308,16 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     try {
       const startRes = await lastValueFrom(this.http.get<any[]>(startUrl));
       const endRes = await lastValueFrom(this.http.get<any[]>(endUrl));
+
+      console.log('Start location response:', startRes);
+      console.log('End location response:', endRes);
   
       if (startRes.length > 0 && endRes.length > 0) {
         const startCoords = startRes[0];
         const endCoords = endRes[0];
+
+        console.log('Start coordinates:', startCoords);
+        console.log('End coordinates:', endCoords);
   
         const startLatLng: [number, number] = [parseFloat(startCoords.lat), parseFloat(startCoords.lon)];
         const endLatLng: [number, number] = [parseFloat(endCoords.lat), parseFloat(endCoords.lon)];
@@ -318,6 +339,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
           this.map.removeLayer(this.routeLayer);
         }
 
+        console.log('Route geometry:', routeResponse.routes[0].geometry);
         this.routeLayer = L.geoJSON(routeResponse.routes[0].geometry).addTo(this.map);
 
         /************/
@@ -367,7 +389,10 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
         // Trazar la ruta inicial
         this.drawRoute(startLatLng, endLatLng);
   
-      } 
+      } else{
+        console.log('no funciona');
+
+      }
     } catch (error) {
       console.error('Error en la búsqueda de ubicaciones:', error);
       this.showAlert('Error', 'Ocurrió un problema al buscar las ubicaciones. Intenta nuevamente.');
@@ -397,7 +422,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
       }
   
       const routeCoordinates = route.geometry.coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
-      this.routeLayer = L.polyline(routeCoordinates, { color: 'blue', weight: 5 }).addTo(this.map);
+      this.routeLayer = L.polyline(routeCoordinates, { color: 'blue', weight: 5, opacity: 0.7 }).addTo(this.map);
   
       // Mostrar detalles
       this.showRouteDetails(distanceKm, durationMin, estimatedPrice);
@@ -494,7 +519,7 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
 
   onSearchChange(event: any, type: string) {
     const query = event.detail.value;
-    const radius = 5000;  // Radio de búsqueda de 5 km
+    const radius = 100000;  // Radio de búsqueda de 5 km
     if (query.length > 2) {
       this.locationService
         .searchLocation(query, this.userLatitude, this.userLongitude, radius)

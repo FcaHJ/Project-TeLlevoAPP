@@ -12,6 +12,10 @@
   <ion-content>
     <p class="bienvenido ion-text-right">Bienvenido {{username}}!</p>
 
+    <div class="img-duoc">
+      <ion-img src="assets/icon/duoc.png" alt="Logo Duoc UC"></ion-img>
+    </div>
+    
     <div class="toggle">
       <ion-toggle labelPlacement="stacked" alignment="start" [(ngModel)]="isActive" (ionChange)="cambiarEstado($event)">
         En servicio
@@ -21,7 +25,7 @@
       <div class="input-container">
         <ion-select class="custom-select" labelPlacement="stacked" label="Desde:" placeholder="Selecciona Sede" fill="outline" interface="popover" [(ngModel)]="selectedSede" (ionChange)="saveSelectedSede()">
           <ion-icon slot="start" name="navigate-sharp" aria-hidden="true"></ion-icon>
-          <ion-select-option *ngFor="let sede of sedes" [value]="sede.id">{{ sede.name }}</ion-select-option>
+          <ion-select-option *ngFor="let sede of sedes" [value]="sede">{{ sede.name }}</ion-select-option>
         </ion-select>
       </div>
 

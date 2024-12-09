@@ -44,9 +44,15 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home-driver/home-driver.module').then( m => m.HomeDriverPageModule)
   },
   {
+    path: 'booking',
+    canActivate: [AuthenticationGuard],
+    loadChildren: () => import('./pages/booking/booking.module').then( m => m.BookingPageModule)
+  },
+  {
     path: '**',  // Captura todas las rutas no existentes
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
 
  
 

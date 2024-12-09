@@ -7,18 +7,19 @@
   </ion-header>
   <ion-content>
     <ion-list *ngIf="userRole === 1" class="menu-list">
-      <ion-item color="secondary" routerLink="/users"><ion-icon name="people"></ion-icon> Usuarios</ion-item>
-      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
+      <ion-item color="secondary" routerLink="/users"><ion-icon name="people"></ion-icon> <p>Usuarios</p></ion-item>
+      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> <p>Perfil</p></ion-item>
     </ion-list>
 
     <ion-list *ngIf="userRole === 2" class="menu-list">
-      <ion-item color="secondary" routerLink="/home"><ion-icon name="home"></ion-icon> Inicio</ion-item>
-      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
+      <ion-item color="secondary" routerLink="/home"><ion-icon name="home"></ion-icon> <p>Inicio</p></ion-item>
+      <ion-item color="secondary" routerLink="/booking"><ion-icon name="car-sport"></ion-icon> <p>Reserva de viaje</p></ion-item>
+      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> <p>Perfil</p></ion-item>
     </ion-list>
 
     <ion-list *ngIf="userRole === 3" class="menu-list">
-      <ion-item color="secondary" routerLink="/home-driver"><ion-icon name="home"></ion-icon> Inicio</ion-item>
-      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon> Perfil</ion-item>
+      <ion-item color="secondary" routerLink="/home-driver"><ion-icon name="home"></ion-icon> <p>Inicio</p></ion-item>
+      <ion-item color="secondary" routerLink="/profile"><ion-icon name="person-circle"></ion-icon><p>Perfil</p></ion-item>
     </ion-list>
 
     <div class="logout-container">
