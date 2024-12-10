@@ -18,8 +18,8 @@
       <ion-list>
         <ion-item *ngFor="let user of users" lines="full" color="secondary">
           <ion-label>
-            <h2>{{ user.username }}</h2>
-            <p>{{ user.email }} - {{ user.fullname }}</p>
+            <h2 class="text">{{ user.username }}</h2>
+            <p class="text">{{ user.email }} - {{ user.fullname }}</p>
           </ion-label>
           <ion-buttons slot="end">
             <ion-button color="tertiary" (click)="editUser(user)">
@@ -43,27 +43,27 @@
       <form (ngSubmit)="isEditing ? updateUser(newUser) : createUser()" class="form-container">
 
         <ion-item color="secondary">
-          <ion-label position="floating">Username</ion-label>
-          <ion-input type="text" [(ngModel)]="newUser.username" name="username" required></ion-input>
+          <ion-label position="floating" class="text">Nombre de usuario</ion-label>
+          <ion-input type="text" class="text" [(ngModel)]="newUser.username" name="username" required></ion-input>
         </ion-item>
 
         <ion-item color="secondary">
-          <ion-label position="floating">Email</ion-label>
-          <ion-input type="email" [(ngModel)]="newUser.email" name="email" required></ion-input>
+          <ion-label position="floating" class="text">Correo</ion-label>
+          <ion-input type="email" class="text" [(ngModel)]="newUser.email" name="email" required></ion-input>
         </ion-item>
 
         <ion-item color="secondary">
-          <ion-label position="floating">Password</ion-label>
-          <ion-input type="password" [(ngModel)]="newUser.password" name="password" required></ion-input>
+          <ion-label position="floating" class="text">Contraseña</ion-label>
+          <ion-input type="password" class="text" [(ngModel)]="newUser.password" name="password" required></ion-input>
         </ion-item>
 
         <ion-item color="secondary">
-          <ion-label position="floating">Full Name</ion-label>
-          <ion-input type="text" [(ngModel)]="newUser.fullname" name="fullname" required></ion-input>
+          <ion-label position="floating" class="text">Nombre completo</ion-label>
+          <ion-input type="text" class="text" [(ngModel)]="newUser.fullname" name="fullname" required></ion-input>
         </ion-item>
 
-        <ion-item color="secondary">
-          <ion-label>Selecciona Rol</ion-label>
+        <ion-item color="secondary" class="text">
+          <ion-label class="text">Selecciona Rol</ion-label>
           <ion-select [(ngModel)]="newUser.role" name="role" placeholder="Role" required>
             <ion-select-option value="1">Admin</ion-select-option>
             <ion-select-option value="2">Pasajero</ion-select-option>

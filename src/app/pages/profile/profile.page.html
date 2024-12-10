@@ -46,23 +46,23 @@
     <ion-card-content>
       <form (ngSubmit)="guardarInfoVehiculo()" class="form-container">
         <ion-item color="secondary">
-          <ion-label position="floating">Modelo</ion-label>
-          <ion-input type="text" [(ngModel)]="modelo" name="modelo" required></ion-input>
+          <ion-label position="floating" class="text">Modelo</ion-label>
+          <ion-input type="text" class="text" [(ngModel)]="modelo" name="modelo" required></ion-input>
         </ion-item>
 
         <ion-item color="secondary">
-          <ion-label position="floating">Capacidad</ion-label>
-          <ion-input type="number" [(ngModel)]="capacidad" name="capacidad" required></ion-input>
+          <ion-label position="floating" class="text">Capacidad</ion-label>
+          <ion-input type="number" class="text" [(ngModel)]="capacidad" name="capacidad" required></ion-input>
         </ion-item>
 
         <ion-item color="secondary">
-          <ion-label position="floating">Patente</ion-label>
-          <ion-input type="text" [(ngModel)]="patente" name="patente" required></ion-input>
+          <ion-label position="floating" class="text">Patente</ion-label>
+          <ion-input type="text" class="text" [(ngModel)]="patente" name="patente" required></ion-input>
         </ion-item>
 
         <ion-item color="secondary">
-          <ion-label position="floating">Color</ion-label>
-          <ion-input type="text" [(ngModel)]="color" name="color" required></ion-input>
+          <ion-label position="floating" class="text">Color</ion-label>
+          <ion-input type="text" class="text" [(ngModel)]="color" name="color" required></ion-input>
         </ion-item>
 
         <ion-button expand="block" type="submit" class="btn-profile">Guardar Información</ion-button>

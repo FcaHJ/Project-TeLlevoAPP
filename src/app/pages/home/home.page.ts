@@ -114,11 +114,12 @@ export class HomePage implements OnInit, AfterViewInit {
       }
     
       // Cargar los usuarios correctamente
-      this.userService.loadUsers().subscribe((users) => {
-        console.log('Usuarios cargados:', users);
-        // Ahora puedes usar la lista de usuarios
-        this.filterDrivers(users); // Si deseas filtrar usuarios con rol de conductor
-      });
+      try {
+        const users = await lastValueFrom(this.userService.loadUsers());
+        this.filterDrivers(users);
+      } catch (error) {
+        console.error('Error al cargar usuarios:', error);
+      }
 
       //Estado del conductor
       const estadoConductor = await this.storage.get('estadoConductor');
@@ -202,11 +203,6 @@ export class HomePage implements OnInit, AfterViewInit {
       this.noFilteredDrivers = false;
     }
 
-    showDriversList() {
-      this.activeDrivers = this.drivers.filter(driver => driver.isActive === true); // Filtrar conductores activos
-      
-    }
-
     // Función para filtrar los usuarios con rol de "conductor"
     filterDrivers(users: User[]) {
       this.drivers = users.filter(user => user.role === 3); // Rol de conductor 
@@ -218,7 +214,8 @@ export class HomePage implements OnInit, AfterViewInit {
         driver.horario = this.horarios[index % this.horarios.length].time; // Asignar horario de forma cíclica
       });
 
-      this.showDriversList();
+      this.activeDrivers = this.drivers.filter(driver => driver.isActive === true);
+      console.log('Conductores activos:', this.activeDrivers);
   }
 
   // Filtrar horarios según la sede seleccionada

@@ -35,6 +35,7 @@ export class UserService  {
       } else {
         // Si no hay usuarios en el storage, los obtenemos desde la API
         this.http.get<User[]>(this.url).subscribe((data) => {
+          console.log(data);
           this.users = data;  // Asignamos los usuarios obtenidos desde la API
           this.storage.set('users', data);  // Guardamos los usuarios en Storage
         });

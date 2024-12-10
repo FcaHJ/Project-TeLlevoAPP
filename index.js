@@ -8,7 +8,7 @@ app.use(express.json());
 
 // Permitir solicitudes de http://localhost:8100 (frontend)
 app.use(cors({
-  origin: 'http://localhost:8100',
+  origin: ['http://localhost:8100', 'https://project-te-llevo-app.vercel.app'],  
 }));
 
 // Inicia el servidor
