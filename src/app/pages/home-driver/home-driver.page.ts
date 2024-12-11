@@ -190,6 +190,13 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
       console.log('Horario guardado:', this.selectedHorario);
     }
   }
+
+  async saveSelectedDestino() {
+    if (this.endLocation) {
+      await this.storageService.set('endLocation', this.endLocation);
+      console.log('Destino guardado:', this.endLocation);
+    }
+  }
     
   async cambiarEstado(event: any) {
     console.log('Estado del toggle:', this.isActive);

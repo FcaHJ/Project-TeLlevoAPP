@@ -30,7 +30,7 @@
       </div>
 
       <div class="input-container">
-        <ion-input fill="outline" labelPlacement="stacked" label="Hacia:" [(ngModel)]="endLocation" placeholder="Fin ruta" (ionInput)="onSearchChange($event, 'end')"></ion-input>
+        <ion-input fill="outline" labelPlacement="stacked" label="Hacia:" [(ngModel)]="endLocation" (ionChange)="saveSelectedDestino()" placeholder="Fin ruta" (ionInput)="onSearchChange($event, 'end')"></ion-input>
       </div>
       <ion-list *ngIf="suggestionsEnd.length > 0">
         <ion-item *ngFor="let suggestion of suggestionsEnd" (click)="selectSuggestion(suggestion, 'end')">

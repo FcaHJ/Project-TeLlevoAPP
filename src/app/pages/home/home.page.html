@@ -61,7 +61,7 @@
         <ion-card-content>
           <p>Email: {{ driver.email }}</p>
           <p>Sede: {{ driver.sede }}</p> 
-          <p>Destino: </p> 
+          <p>Destino: {{ driver.endLocation || 'No especificado' }}</p>
           <p>Horario: {{ driver.horario }}</p> 
           <p>Estado: {{ driver.isActive ? 'Activo' : 'Inactivo' }}</p>
           <div class="btn-card">
