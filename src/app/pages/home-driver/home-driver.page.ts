@@ -77,8 +77,6 @@ export class HomeDriverPage implements OnInit, AfterViewInit {
     { id: 20, name: 'Sede Puerto Montt', address: 'DuocUC Sede Puerto Montt, 651, Egaña, Población Miramar, Puerto Montt, Provincia de Llanquihue, Región de Los Lagos, 5507138, Chile'}
   ];
 
-  schedule: string = '';
-  destination: string = '';
 
   constructor(
     private authService: AuthService,

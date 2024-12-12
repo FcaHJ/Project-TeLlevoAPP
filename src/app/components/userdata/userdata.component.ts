@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-userdata',
@@ -18,11 +21,17 @@ export class UserdataComponent  implements OnInit {
   total: number = 0;
   name!: string
   selectedPaymentMethod: any = null; 
+  passenger: number = 0;
+  available: any[] = [];
+  drivers: any[] = [];
+  userId: number | null = null;
+
 
   constructor(
     private modalCtrl: ModalController, 
     private toastController: ToastController,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -40,17 +49,26 @@ export class UserdataComponent  implements OnInit {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
 
+  passengers(){
+    this.total = this.passenger*4000
+  }
+
   selectPaymentMethod(method: any) {
     this.selectedPaymentMethod = method; // Actualiza el método de pago seleccionado.
     console.log('Método seleccionado:', method);
   }
 
-  confirmReservation() {
-    if (this.selectedPaymentMethod) {
-      console.log('Reserva confirmada con el método:', this.selectedPaymentMethod);
-      // Aquí puedes agregar la lógica para procesar la reserva.
-    } else {
-      console.log('Por favor, selecciona un método de pago.');
+  async confirmReservation() {
+    if (this.passenger > 0 && this.passenger < 9){
+      if (this.selectedPaymentMethod) {
+        const messageData = this.generateMessage('Reserva confirmada', 'success');
+        this.modalCtrl.dismiss(messageData,'confirm');
+        this.router.navigate(['/booking'], { queryParams: { mostrarDiv: true } }); 
+      } else {
+        console.log('Por favor, selecciona un método de pago.');
+      }
+    }else{
+      this.generateMessage('Ingrese cantidad de pasajeros valida', 'danger');
     }
   }
 
@@ -63,6 +81,7 @@ export class UserdataComponent  implements OnInit {
       color: color
     });
     await toast.present();
+    return { message, color };
   }
 
 }

@@ -15,7 +15,7 @@
       </div>
 
       <div class="input-container">
-        <ion-input fill="outline" label="Pasajeros:" placeholder="1"></ion-input>
+        <ion-input fill="outline" label="Pasajeros:"  [(ngModel)]="passenger" (ionInput)="passengers()"></ion-input>
       </div>
 
   </div>
@@ -24,7 +24,7 @@
   
     <ion-card class="card-payment" *ngFor="let method of paymentMethods" [class.selected]="method === selectedPaymentMethod" 
     (click)="selectPaymentMethod(method)">
-      <ion-card-header>
+      <ion-card-header> 
         <ion-card-title class="card">{{ method.name }}</ion-card-title>
       </ion-card-header>
       <ion-card-content class="card">
@@ -34,7 +34,7 @@
   </div>
 
   <div class="total">
-    <h6>TOTAL: {{ total }}</h6>
+    <h6>TOTAL: ${{ total }}</h6>
   </div>
 
   <div class="btn-payment">

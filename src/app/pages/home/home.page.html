@@ -54,21 +54,23 @@
   
     <div *ngIf="activeDrivers.length > 0">
       <h4>Conductores disponibles:</h4>
-      <ion-card *ngFor="let driver of activeDrivers">
-        <ion-card-header>
-          <ion-card-title>{{ driver.username }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>Email: {{ driver.email }}</p>
-          <p>Sede: {{ driver.sede }}</p> 
-          <p>Destino: {{ endLocation || 'No especificado' }}</p>
-          <p>Horario: {{ driver.horario }}</p> 
-          <p>Estado: {{ driver.isActive ? 'Activo' : 'Inactivo' }}</p>
-          <div class="btn-card">
-            <ion-button class="btn-card-driver" (click)="userData()">Reservar</ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
+      <div *ngIf="!mostrarDiv">
+        <ion-card *ngFor="let driver of activeDrivers">
+          <ion-card-header>
+            <ion-card-title>{{ driver.username }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Email: {{ driver.email }}</p>
+            <p>Sede: {{ driver.sede }}</p> 
+            <p>Destino: {{ endLocation || 'No especificado' }}</p>
+            <p>Horario: {{ driver.horario }}</p> 
+            <p>Estado: {{ driver.isActive ? 'Activo' : 'Inactivo' }}</p>
+            <div class="btn-card">
+              <ion-button class="btn-card-driver" (click)="userData()">Reservar</ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
 
   </div>

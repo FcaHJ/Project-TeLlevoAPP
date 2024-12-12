@@ -11,7 +11,26 @@
 
 <ion-content>
   <div class="container">
-    <h3>Reservación de viaje:</h3>
-    <!--Completar-->
+    <h4>Viaje reservado:</h4>
+    <div *ngIf="!mostrarDiv">
+      <h3 class="ion-text-center">No tienes reservas el día de hoy 🫢</h3>
+    </div>
+    <div *ngIf="mostrarDiv">
+      <ion-card *ngFor="let driver of activeDrivers">
+        <ion-card-header>
+          <ion-card-title>{{ driver.username }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>Email: {{ driver.email }}</p>
+          <p>Sede: {{ driver.sede }}</p> 
+          <p>Destino: {{ endLocation || 'No especificado' }}</p>
+          <p>Horario: {{ driver.horario }}</p> 
+          <p>Estado: {{ driver.isActive ? 'Activo' : 'Inactivo' }}</p>
+          <div class="btn-card">
+            <ion-button class="btn-card-driver" (click)="cancelTrip()">Cancelar Reserva</ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
 </ion-content>

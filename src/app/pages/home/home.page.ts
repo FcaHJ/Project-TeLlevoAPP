@@ -12,7 +12,7 @@ import { Capacitor } from '@capacitor/core';
 import { RateService } from 'src/app/services/rate.service';
 import { UserService } from 'src/app/services/user.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserdataComponent } from 'src/app/components/userdata/userdata.component';
 
 
@@ -80,6 +80,8 @@ export class HomePage implements OnInit, AfterViewInit {
   suggestionsEnd: any[] = [];
   userLatitude!: number;
   userLongitude!: number;
+  isAvailable: boolean = true;
+
 
 
   constructor(
@@ -90,11 +92,15 @@ export class HomePage implements OnInit, AfterViewInit {
     //private storage: Storage, // Añadimos el servicio Storage
     private http: HttpClient,
     private locationService: LocationService,
-    private rateService: RateService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalCtrl: ModalController,
     private location: Location
-    ) { this.storage.init(); }
+    ) { 
+    this.storage.init(); 
+    const storedState = localStorage.getItem('mostrarDiv');
+    this.mostrarDiv = storedState === 'true'; 
+    }
 
     async ngOnInit() {
       this.userRole = this.authService.getCurrentUserRole();
@@ -152,10 +158,21 @@ export class HomePage implements OnInit, AfterViewInit {
       this.openModal();
     } 
 
+    mostrarDiv: boolean = false;
+
     async openModal() {
       const modal = await this.modalCtrl.create({
         component: UserdataComponent
       });
+
+      // Cuando el modal se cierra, capturar los datos y cambiar la visibilidad
+    modal.onDidDismiss().then((data) => {
+      if (data.data) {
+        this.mostrarDiv = !this.mostrarDiv; // Cambia el estado
+        localStorage.setItem('mostrarDiv', String(this.mostrarDiv)); 
+      }
+    });
+
       await modal.present();
     }
 
@@ -218,7 +235,7 @@ export class HomePage implements OnInit, AfterViewInit {
         driver.sede = this.sedes[index % this.sedes.length].name; // Asignar sede de forma cíclica
         driver.horario = this.horarios[index % this.horarios.length].time; // Asignar horario de forma cíclica
       });
-      this.activeDrivers = this.drivers.filter(driver => driver.isActive === true);
+      this.activeDrivers = this.drivers.filter(driver => driver.isActive);
       console.log('Conductores activos:', this.activeDrivers);
   }
   

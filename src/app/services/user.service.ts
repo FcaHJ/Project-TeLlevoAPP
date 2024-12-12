@@ -107,8 +107,15 @@ export class UserService  {
     return this.http.put(`${this.url}/${id}`, updateData); // Realiza una solicitud PUT a la API
   }
 
+  updateAvailability(conductorId: number, isAvailable: boolean): Observable<any> {
+    const updateData = { isAvailable }; // Datos a actualizar, solo la diaponibilidad
+    return this.http.put(`${this.url}/${conductorId}`, updateData);
+  }
+  
+
   //Guarda la ubicacion del usuario
   saveUserLocation(id: number, latitude: number, longitude: number) {
     return this.http.post<any>(`${this.url}/${id}`, { id, latitude, longitude });
   }
+  
 }
