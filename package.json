@@ -1,5 +1,5 @@
 {
-  "name": "TeLlevoAPP",
+  "name": "tellevoapp",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -37,7 +37,7 @@
     "@types/leaflet": "^1.9.14",
     "cordova-sqlite-storage": "^6.1.0",
     "cors": "^2.8.5",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "ionicons": "^7.0.0",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
@@ -75,5 +75,8 @@
     "nodemon": "^3.1.7",
     "typescript": "~5.4.0"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "main": "index.js",
+  "keywords": [],
+  "license": "ISC"
 }

@@ -71,6 +71,7 @@ export class HomePage implements OnInit, AfterViewInit {
   noFilteredDrivers: boolean = false;
 
   startLocation: string = '';
+  endLocation!: string;
 
   routeLayer: any;
   searchTerm: string = '';
@@ -79,6 +80,7 @@ export class HomePage implements OnInit, AfterViewInit {
   suggestionsEnd: any[] = [];
   userLatitude!: number;
   userLongitude!: number;
+
 
   constructor(
     private authService: AuthService,
@@ -123,6 +125,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
       //Estado del conductor
       const estadoConductor = await this.storage.get('estadoConductor');
+      this.endLocation = await this.storage.get('endLocation');
       
     }
 
@@ -159,6 +162,7 @@ export class HomePage implements OnInit, AfterViewInit {
     async showDrivers() {
       const allUsers = await this.userService.getUsers();
       this.drivers = allUsers.filter(user => user.role === 3); 
+      this.endLocation = await this.storage.get('endLocation');
     }
 
     // Función que se llama al presionar el botón de 'Buscar'
@@ -206,6 +210,7 @@ export class HomePage implements OnInit, AfterViewInit {
     // Función para filtrar los usuarios con rol de "conductor"
     filterDrivers(users: User[]) {
       this.drivers = users.filter(user => user.role === 3); // Rol de conductor 
+
       console.log('Usuarios conductores:', this.drivers);
 
       // Asignar datos simulados de sede y horario
@@ -213,10 +218,10 @@ export class HomePage implements OnInit, AfterViewInit {
         driver.sede = this.sedes[index % this.sedes.length].name; // Asignar sede de forma cíclica
         driver.horario = this.horarios[index % this.horarios.length].time; // Asignar horario de forma cíclica
       });
-
       this.activeDrivers = this.drivers.filter(driver => driver.isActive === true);
       console.log('Conductores activos:', this.activeDrivers);
   }
+  
 
   // Filtrar horarios según la sede seleccionada
   filterBySede() {
